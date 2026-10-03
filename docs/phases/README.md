@@ -1,7 +1,7 @@
 # Sentinel AI — Phase Governance
 
 **File:** `docs/phases/README.md`  
-**Status:** Proposed  
+**Status:** Accepted  
 **Owner:** Engineering  
 **Scope:** Governance of all Sentinel AI phase documents
 

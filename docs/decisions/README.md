@@ -1,7 +1,7 @@
 # Sentinel AI — Architecture Decision Record Governance
 
 **File:** `docs/decisions/README.md`  
-**Status:** Proposed  
+**Status:** Accepted  
 **Owner:** Engineering  
 **Authority:** ADR process and index
 

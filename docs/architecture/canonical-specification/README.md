@@ -1,7 +1,7 @@
 # Sentinel AI — Canonical Specification History
 
 **File:** `docs/architecture/canonical-specification/README.md`  
-**Status:** Proposed  
+**Status:** Accepted  
 **Owner:** Engineering  
 **Scope:** Governance of Sentinel AI Canonical Engineering Specification versions
 
