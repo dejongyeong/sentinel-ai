@@ -1,0 +1,14 @@
+title = "Sentinel AI Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+# Add only narrowly justified project-specific rules or allowlists here.
+#
+# Never use an allowlist to suppress a confirmed real secret.
+#
+# Every allowlist entry must document:
+# - why the value is not a secret;
+# - why detection cannot be solved more narrowly;
+# - owner/reviewer;
+# - review condition.

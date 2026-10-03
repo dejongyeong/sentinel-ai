@@ -1,0 +1,46 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Node
+node_modules/
+.pnpm-store/
+.turbo/
+.next/
+dist/
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test / temporary output
+tmp/
+temp/
+*.log
+
+# Generated reports
+reports/
+artifacts/
+
+# Local Claude settings
+.claude/settings.local.json
+
+# Gitleaks local output
+gitleaks-report.json
