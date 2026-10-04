@@ -292,6 +292,8 @@ The S2 snapshot for this run is captured after this section is written. Its inte
 
 ### Run 3 — 2026-10-04 (re-verification at C4)
 
+**Section status:** Superseded by Run 4 (fresh verification at C7).
+
 **Authorization:** owner authorization of the formal Phase 0 re-verification against C4.
 **Baseline:** C4 `8b833081f257eb82af26fd0991697f1e518f6287` (parent C3 `5d89f3cff3cb8215260bca8909ece5aa32c49744`, then C2 `b40505dc…`, root C1 `a6d58ce0…`). The working tree differs from C4 only by the four uncommitted Run 2 evidence records (byte-identical to their recorded state). Baseline snapshot B3 captured at 2026-10-04T00:41:05Z with both methods (56 files; membership equal; `working_tree_content_hash` `fee107c5232037cf97f331b31d20d0de3d82761422b8da16a6ad6c17be1924b8`).
 
@@ -389,3 +391,170 @@ No authorized remediation was applied. No consequential architectural decision i
 Recording the Run 3 evidence changed the four evidence records (inputs of `VER-P0-STATUS-RECORD-001` and of `VER-P0-GIT-SAFETY-001`). The deterministic suite was re-run against the same B3 baseline at 2026-10-04T00:45:18Z (`[REAL REPO] bash scripts/verify-phase.sh phase-0 --baseline <scratchpad>/R3-B.snapshot.json --json-out <scratchpad>/verify-R3b.json`, exit 0): PASS=19, FAIL=0, BLOCKED=2, NOT APPLICABLE=2; process_action=CONTINUE; no result differs from R3.1. **The R3.1 deterministic results are `Superseded` by this re-run.** `VER-P0-STATUS-RECORD-001` PASS on the updated records; `VER-P0-GIT-SAFETY-001` (script part) PASS with changes since B3 limited to the four evidence records.
 
 The S2 snapshot for this run is captured after this section is written; its integrity-gate result is reported to the owner and stored outside the repository. The gate requires: B3 to S2 changes limited to the four evidence records; no change to any committed file (C4 content); commit count and remotes unchanged; both snapshot methods agreeing.
+
+### Run 4 — 2026-10-04 (fresh verification at C7)
+
+**Authorization:** the owner authorized a fresh Phase 0 verification against C7, with the repository read-only during the run. The owner then separately authorized recording the Run 4 evidence, after reviewing and accepting the Run 4 result.
+**Baseline:** C7 `b71fd858cf0530f9aae31770cd58171017d70426`.
+- Ancestry: C6 `b80a40af9c79d6e0b59acccdef589ee3f0b31eca`, C5 `24d1c63587066197f0f3b6fb1add32f1f1b8cf19`, C4 `8b833081…`, C3 `5d89f3cf…`, C2 `b40505dc…`, root C1 `a6d58ce0…`.
+- 7 commits, no remotes, clean working tree, nothing staged or untracked.
+- S0 (2026-10-04T02:08:57Z) and S1 (02:09:07Z) were captured with both methods: 56 files, membership equal, `working_tree_content_hash` `7e31b10f1712bbfe96eb73874755bc929c1b2405385c7f19de3ddac943f72398`.
+- S0 equals S1, and the bootstrap manifest equals the C7 tree.
+
+**Run header (from `scripts/verify-phase.sh`):**
+- 2026-10-04T02:09:08Z; `commit_count` 7; no remotes.
+- Command: `[REAL REPO] bash scripts/verify-phase.sh phase-0 --baseline <scratchpad>/R4-S1.snapshot.json --json-out <scratchpad>/verify-R4a.json`; exit 0.
+- PASS=19, FAIL=0, BLOCKED=2, NOT APPLICABLE=2; process_action=CONTINUE; `D1_SCRIPT_CONDITIONS=met`.
+
+**Recording note:** Run 4 was performed with the repository read-only. No evidence was written between S0 and the Run 4 S2 snapshot (02:11:50Z), and that S1→S2 comparison was identical (R4.6). This Run 4 section was written afterwards under the separate recording authorization; R4.8 accounts for it.
+
+#### R4.1 Deterministic checks
+
+| VER ID | Result | Process action | Evidence / reason |
+| ------ | ------ | -------------- | ----------------- |
+| VER-P0-DOCS-001 | PASS | CONTINUE | 52 required files present |
+| VER-P0-STATUS-DOC-001 | PASS | CONTINUE | 24 authority documents conform |
+| VER-P0-STATUS-ADR-001 | NOT APPLICABLE | CONTINUE | Applicability false: no ADR files |
+| VER-P0-STATUS-PHASE-001 | PASS | CONTINUE | 1 phase document conforms |
+| VER-P0-STATUS-RECORD-001 | PASS | CONTINUE | 4 evidence records conform |
+| VER-P0-LIFECYCLE-001 | PASS | CONTINUE | Status matches history; all transitions permitted |
+| VER-P0-ACCEPT-001 | PASS | CONTINUE | All six gate conditions hold (path-level check; the version relationship is verified in R4.2) |
+| VER-P0-TEMPLATE-001 | PASS | CONTINUE | 25 tasks have all nine sections in order |
+| VER-P0-VERSIONREF-001 | PASS | CONTINUE | 18 generic governance files resolve the version through the canonical README |
+| VER-P0-CLAUDE-001 | PASS | CONTINUE | 102 lines; required sections; no hard-coded version |
+| VER-P0-SKILLS-001 | PASS | CONTINUE | 5 skills conform |
+| VER-P0-AGENTS-CONFIG-001 | PASS | CONTINUE | 5 reviewer agents conform (configuration only) |
+| VER-P0-FORMAT-001 | NOT APPLICABLE | CONTINUE | Phase 0 formatter contract not established; formatter selection belongs to Phase 1 |
+| VER-P0-HOOKS-001 | PASS | CONTINUE | 27 hook fixtures behaved as expected |
+| VER-P0-GITLEAKS-NEG | PASS | CONTINUE | Clean scans exit 0 before and after |
+| VER-P0-GITLEAKS-POS | PASS | CONTINUE | Synthetic token detected (exit 1, rule `github-pat`); 0 repository occurrences (local execution; not CI evidence) |
+| VER-P0-GITLEAKS-HISTORY | PASS | CONTINUE | `gitleaks git --redact` exit 0 over C1–C7 |
+| VER-P0-PRECOMMIT-NEG | PASS | CONTINUE | `[TEMP REPO]` 56 files copied and staged; hooks pass; clean commit succeeds |
+| VER-P0-PRECOMMIT-POS | PASS | CONTINUE | `[TEMP REPO]` gitleaks hook rc=1, all hooks rc=1, commit rejected, 0 commits |
+| VER-P0-CI-CONFIG | PASS | CONTINUE | Static configuration conforms (not operational verification; see L1-R3-2) |
+| VER-P0-CI-EXEC | BLOCKED | CONTINUE | Prerequisite false: no remote repository configured; no CI run URL supplied |
+| VER-P0-REPO-PROTECTION | BLOCKED | CONTINUE | Prerequisite false: no remote repository configured; host settings not inspectable (`gh` CLI unavailable) |
+| VER-P0-GIT-SAFETY-001 (script part) | PASS | CONTINUE | commit_count=7; remotes unchanged; no change since S1 at script time |
+
+#### R4.2 Acceptance/version and evidence checks (orchestration, `[REAL REPO]` read-only)
+
+**History:** C7 → C6 → C5 → C4 → C3 → C2 → C1 (root); 7 commits; no remotes.
+
+**Commit scopes:**
+- C5 and C6 each touch only `docs/architecture/acceptance-register.md`.
+- C7 touches only the four Phase 0 evidence records.
+
+**Acceptance entries:**
+- **ACC-001:** v0.3 is unchanged (`b81d2d9f87b5d166751d64153d536ed5349e7acd` at C1 and HEAD).
+- **ACC-002 to ACC-005 (status, @ C1):** each document changed after C1 only by its own `**Status:**` line (0 other changed lines).
+- **ACC-006 (status, @ C1) and ACC-009 (status, @ C5):**
+  - From C1 to C5, the register's only change outside its Status line and appended ACC rows is the §2 whitespace-only-reformatting bullet. That is a substantive change, so fresh acceptance was required.
+  - C5 changes exactly two things: Status Accepted→Proposed, and that bullet.
+  - C6 changes exactly two things: Status Proposed→Accepted (permitted by the status-type rule), and the ACC-009 row.
+  - The register is unchanged from C6 to HEAD.
+  - ACC-009 identifies exactly one document and version: `@ commit 24d1c63587066197f0f3b6fb1add32f1f1b8cf19`, which resolves to a commit. Its type is `status`.
+  - ACC-001 to ACC-008 are byte-identical from C4 to HEAD.
+- **ACC-007 and ACC-008 (content):** the Phase 0 document is unchanged from C3 to HEAD, so its current content is covered by ACC-008.
+
+**Authority placement:** `documentation-authority.md` §23 delegates "which later changes leave a recorded acceptance in force" to register §2. A sweep found no other governed file defining "substantive", whitespace-only, or reformatting rules. The C5 bullet therefore sits in the designated authority and creates no competing source.
+
+**Other checks:**
+- No ADR files and no `docs/decisions/adr/` directory.
+- `.github/workflows/security.yml` is unchanged from C3 to HEAD.
+- `scripts/`, `.claude/`, `.gitleaks.toml` and `.pre-commit-config.yaml` are unchanged since C1.
+
+**Evidence lifecycle:**
+- C7 adds 432 lines and deletes none.
+- The only mid-file insertions are the four Run 1 `Superseded by Run 2` markers.
+- The C7 blobs equal the Run 3 S2 content plus the two approved correction notes.
+- Section markers form a chain: Run 1 superseded by Run 2, Run 2 superseded by Run 3, Run 3 current at C7.
+- No local paths appear in the added content. Agent IDs remain withheld.
+
+#### R4.3 Layer 1 review
+
+| VER ID | Result | Process action | Evidence | Interpretation |
+| ------ | ------ | -------------- | -------- | -------------- |
+| VER-P0-REVIEW-L1 | PASS | CONTINUE | `engineering-review.md` Run 4; `contradiction-review.md` Run 4 | Performed and recorded with the required fields; not independent. 0 High; 4 Medium open (1 deferred); 12 Low open (1 deferred); 5 Info. L1-R3-3 and L1-R3-4 resolved; L1-SEC-2 closed by owner disposition. |
+
+#### R4.4 Layer 2 review
+
+| VER ID | Result | Process action | Reason |
+| ------ | ------ | -------------- | ------ |
+| VER-P0-REVIEW-L2-RUNTIME-architecture-reviewer | BLOCKED | CONTINUE | Reported surface `Read, Grep, Glob, SubagentHandback` is not a subset of {Read, Grep, Glob}; reviewer not run |
+| VER-P0-REVIEW-L2-RUNTIME-security-reviewer | BLOCKED | CONTINUE | same |
+| VER-P0-REVIEW-L2-RUNTIME-ai-engineering-reviewer | BLOCKED | CONTINUE | same |
+| VER-P0-REVIEW-L2-RUNTIME-verification-reviewer | BLOCKED | CONTINUE | same |
+| VER-P0-REVIEW-L2-RUNTIME-documentation-reviewer | BLOCKED | CONTINUE | same |
+
+Evidence: `independent-review.md` Run 4; the pre-flight snapshots (02:10:56Z–02:11:24Z) were identical. Under P0-AC-025 these are recorded, permitted BLOCKED states and members of `TRANSITION_PERMITTED_BLOCKED`; they are not PASS. No independent review was performed.
+
+#### R4.5 Reconciliation
+
+| Finding | Classification | Remediation authorized in this run? |
+| ------- | -------------- | ----------------------------------- |
+| L1-R3-3 / CR-6 | resolved by C5 and ACC-009 | n/a |
+| L1-R3-4 | resolved by C7 | n/a |
+| L1-SEC-2 | closed for the current Phase 0 scope by owner disposition (`engineering-review.md` §3.13); basis re-checked | n/a |
+| L1-R3-1 | deferred by owner; compensating manual version check performed (R4.2) | No |
+| L1-R3-2 | deferred by owner; non-blocking | No |
+| L1-R2-2 / CR-5 | open; blocks completion | No |
+| L1-R4-1, L1-R4-3 | informational | No |
+| L1-R4-2 | confirmed; historical record, non-blocking | No |
+
+No authorized remediation was applied. No consequential architectural decision is required. No governance contradiction remains.
+
+#### R4.6 Git safety and S2 integrity gate (run phase)
+
+**Git safety:**
+- `[REAL REPO]` commands executed by orchestration were all read-only: `git status`, `git rev-parse`, `git rev-list --all --count`, `git log`, `git diff` and `git show` between commits, `git cat-file -t`, `git ls-files`, `git ls-tree`, `git hash-object --stdin-paths` (without `-w`), `git remote -v`, `git stash list`; plus `grep` and `gitleaks dir . --redact` (exit 0).
+- There was no `add`, `commit`, `push`, `fetch`, `reset`, `clean`, `stash`, remote change, or history rewrite. The hook-bypass flag was not passed to any Git command.
+- Commits occurred only in `[TEMP REPO]` repositories created by the pre-commit controls.
+
+**S2 integrity gate:** S2 was captured at 02:11:50Z with both methods.
+- S1→S2 was identical: no added, changed or removed files.
+- Commit count 7→7; remotes equal; S0, S1 and S2 manifests equal and equal to the C7 tree.
+- `working_tree_content_hash` `7e31b10f…`.
+- **Result: PASS.**
+
+#### R4.7 Transition evaluation
+
+- Phase 0 is in `Verification`. There is no FAIL and no STOP, so there is no return to `In Progress`.
+- `Verification` → `Complete` is **not eligible**:
+  - `VER-P0-CI-EXEC` and `VER-P0-REPO-PROTECTION` are BLOCKED;
+  - all five Layer 2 reviewers are BLOCKED (permitted);
+  - no completion decision is recorded.
+- `VER-P0-ACCEPT-001` holds at the version level (ACC-001 to ACC-009). The Phase 0 ADR gate is satisfied.
+- Phase 0 status is unchanged: `Verification`.
+
+**Remaining prerequisites before completion:**
+1. A remote, a push, and a real CI run including the positive-control job (`VER-P0-CI-EXEC`).
+2. Default-branch protection and a means to inspect it (`VER-P0-REPO-PROTECTION`, L1-R2-2).
+3. Confirmation of personal ownership when the remote is created (L1-R4-1).
+4. The Final Verification and Completion Record (L1-R2-4).
+5. The owner's completion decision.
+
+#### R4.8 Evidence recording, re-verification (VER-P0-REVERIFY-004) and recording-phase S2 integrity gate
+
+**What changed.** Recording Run 4 changed the four evidence records, which are inputs of `VER-P0-STATUS-RECORD-001` and of `VER-P0-GIT-SAFETY-001`. Each record gained:
+- a `Superseded by Run 4` marker on its Run 3 section;
+- the Run 4 section, appended.
+
+No other line was changed or removed, and no other file changed. The R4.6 gate (S1→S2 identical) describes the read-only run phase. It is not a claim about the recording phase.
+
+**Re-verification.** The deterministic suite was re-run against the same Run 4 S1 baseline at 2026-10-04T02:15:53Z.
+- Command: `[REAL REPO] bash scripts/verify-phase.sh phase-0 --baseline <scratchpad>/R4-S1.snapshot.json --json-out <scratchpad>/verify-R4b.json`; exit 0.
+- Totals: PASS=19, FAIL=0, BLOCKED=2, NOT APPLICABLE=2; process_action=CONTINUE.
+- All 23 check IDs, results and process actions are identical to R4.1.
+- `VER-P0-STATUS-RECORD-001` passes on the updated records.
+- `VER-P0-GIT-SAFETY-001` (script part) passes, with changes since S1 limited to the four evidence records.
+- **The R4.1 deterministic results are `Superseded` by this re-run.**
+
+This re-run evaluated the records with every Run 4 section written except this R4.8 section, which was appended afterwards.
+
+**Recording-phase S2.** The recording-phase S2 snapshot is captured after this section is written. A confirming run of the suite on that final state accompanies it. Both results are reported to the owner and stored outside the repository.
+
+The gate is not relaxed. It requires:
+- S1 to S2 changes limited to the four evidence records;
+- every other path byte-identical to C7;
+- commit count and remotes unchanged;
+- both snapshot methods agreeing.

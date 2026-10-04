@@ -87,6 +87,8 @@ No contradiction among the governing documents was introduced by C2.
 
 ### Run 3 — 2026-10-04 (re-verification at C4)
 
+**Section status:** Superseded by Run 4 (fresh verification at C7).
+
 - **Reviewer:** main Claude Code session (not independent)
 - **Baseline:** C4 `8b833081f257eb82af26fd0991697f1e518f6287` plus the uncommitted Run 2 evidence records (`working_tree_content_hash` `fee107c5232037cf97f331b31d20d0de3d82761422b8da16a6ad6c17be1924b8`)
 - **Method:** `[REAL REPO]` read-only `grep` sweep (excluding the evidence records' own method text), deterministic checks of verification Run 3, and acceptance/version checks
@@ -112,3 +114,35 @@ No contradiction among the governing documents was introduced by C2.
 | CR-7 | Low | Tasks say content is assessed by both review layers although Layer 2 is permissibly BLOCKED | wording overstatement | Future governed revision (L1-R3-7) |
 
 No governance contradiction remains among the governing documents at C4.
+
+### Run 4 — 2026-10-04 (fresh verification at C7)
+
+- **Reviewer:** main Claude Code session (not independent)
+- **Baseline:** C7 `b71fd858cf0530f9aae31770cd58171017d70426`, clean working tree (`working_tree_content_hash` `7e31b10f1712bbfe96eb73874755bc929c1b2405385c7f19de3ddac943f72398`)
+- **Method:**
+  - `[REAL REPO]` read-only `git grep` sweeps, excluding the evidence records, for:
+    - acceptance-entry references outside the register;
+    - competing definitions of substantive, whitespace-only or reformatting changes;
+    - licence and organization-ownership statements;
+  - deterministic checks of verification Run 4;
+  - acceptance/version checks (`verification-record.md` R4.2).
+
+| Check | Observed |
+| ----- | -------- |
+| `ACC-0nn` references outside the register and evidence records | none |
+| Rules defining substantive, whitespace-only or reformatting changes outside the register | none; `documentation-authority.md` §23 delegates the rule to register §2 |
+| Licence or organization-ownership statements outside the evidence records | none |
+| Documents claiming `Accepted` | v0.3 plus the five governed documents. Each is backed by a register entry whose version relationship holds (Run 4 acceptance checks); the register itself is now covered by ACC-009 @ C5. |
+| Generic version references and status models | `VER-P0-VERSIONREF-001`, `VER-P0-STATUS-DOC-001`, `VER-P0-STATUS-PHASE-001`, `VER-P0-STATUS-RECORD-001` PASS (Run 4) |
+
+| ID   | Severity | Issue | Classification | Remediation |
+| ---- | -------- | ----- | -------------- | ----------- |
+| CR-1 | Low | `CLAUDE.md:68` Next.js summary omits "internal domain persistence" | confirmed, unchanged | Not authorized in this stage |
+| CR-2 | Low | Phase-transition BLOCKED set defined in a script constant | confirmed, unchanged | Not authorized in this stage |
+| CR-3 | Info | Roadmap and lifecycle duplicated in the canonical specification (DGI-001) | duplicate (recorded) | Deferred by owner decision |
+| CR-4 | — | CI detection criterion vs never-commit rule | resolved in C3 (accepted by ACC-008) | — |
+| CR-5 | Medium | Repository-protection check depends on the unavailable `gh` CLI | confirmed, unchanged | Owner decision (L1-R2-2) |
+| CR-6 | — | "Substantive content change" undefined for whitespace-only reformatting | **resolved** in C5 (accepted by ACC-009) | — |
+| CR-7 | Low | Tasks say content is assessed by both review layers although Layer 2 is permissibly BLOCKED | wording overstatement, unchanged | Future governed revision (L1-R3-7) |
+
+No governance contradiction remains among the governing documents at C7.

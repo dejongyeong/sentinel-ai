@@ -124,6 +124,8 @@ Severity scale: **High** blocks the Verification transition; **Medium** must be 
 
 ### Run 3 — 2026-10-04 (re-verification at C4)
 
+**Section status:** Superseded by Run 4 (fresh verification at C7).
+
 - **Reviewer:** main Claude Code session (implementer; not independent)
 - **Baseline:** C4 `8b833081f257eb82af26fd0991697f1e518f6287` (C3 `5d89f3cf…`, C2 `b40505dc…`, C1 `a6d58ce0…`); working tree differs from C4 only by the four uncommitted Run 2 evidence records; `working_tree_content_hash` `fee107c5232037cf97f331b31d20d0de3d82761422b8da16a6ad6c17be1924b8`; `commit_count` 4; no remotes
 - **Inputs:** the repository at C4; deterministic suite at 2026-10-04T00:41:15Z (`verification-record.md` Run 3); acceptance/version checks; contradiction sweep (`contradiction-review.md` Run 3)
@@ -181,3 +183,63 @@ Severity scale: **High** blocks the Verification transition; **Medium** must be 
 | L1-SEC-2 | **Closed** for the current Phase 0 scope | Owner decision: the repository is personally owned through the owner's personal GitHub account, not a GitHub organization. The pinned gitleaks-action README (v3.0.0, `e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e`) states that `GITLEAKS_LICENSE` is "Only required for Organizations, not personal accounts". No licence secret and no workflow change are required. A later transfer to an organization would be a new decision. |
 | L1-R3-1 | **Deferred** | Owner disposition: manual acceptance/version validation (Run 3 R3.2) remains the compensating measure for this verification cycle. Verification tooling unchanged. |
 | L1-R3-2 | **Deferred** | Owner disposition: the limitation does not block Phase 0 completion. Verification tooling unchanged. |
+
+### Run 4 — 2026-10-04 (fresh verification at C7)
+
+- **Reviewer:** main Claude Code session (implementer; not independent)
+- **Baseline:**
+  - C7 `b71fd858cf0530f9aae31770cd58171017d70426` (C6 `b80a40af…`, C5 `24d1c635…`, C4 `8b833081…`, C3 `5d89f3cf…`, C2 `b40505dc…`, C1 `a6d58ce0…`)
+  - clean working tree; `working_tree_content_hash` `7e31b10f1712bbfe96eb73874755bc929c1b2405385c7f19de3ddac943f72398`
+  - `commit_count` 7; no remotes
+- **Inputs:**
+  - the repository at C7;
+  - the deterministic suite at 2026-10-04T02:09:08Z (`verification-record.md` Run 4);
+  - acceptance/version and evidence checks (`verification-record.md` R4.2);
+  - the contradiction sweep (`contradiction-review.md` Run 4);
+  - the pinned gitleaks-action README (`gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e`), fetched read-only.
+- **Timestamp (UTC):** 2026-10-04T02:10Z
+
+#### 3.14 Status of earlier findings
+
+Run 3 rows and the §3.13 dispositions are historical and unchanged. This table records their status at C7.
+
+| ID | Run 4 status | Evidence |
+| -- | ------------ | -------- |
+| L1-SE-1 (Medium) | Open | `scripts/` unchanged since C1 |
+| L1-SE-2 (Low) | Open | `scripts/` unchanged since C1 |
+| L1-SE-3 (Low) | Open (known) | `.claude/` unchanged since C1 |
+| L1-AR-1 (Low) | Open | `CLAUDE.md` unchanged since C1 |
+| L1-AR-2 (Low) | Open | `scripts/verify-phase.sh` unchanged since C1 |
+| L1-SEC-1 (Medium) | Open | `VER-P0-CI-EXEC`, `VER-P0-REPO-PROTECTION` BLOCKED |
+| L1-SEC-2 (Medium) | **Closed** for the current Phase 0 scope (owner disposition, §3.13) | The workflow contains no `GITLEAKS_LICENSE` reference. At the pinned README, both quotations used in this record appear verbatim: "required for organizations, not required for user accounts" (§3.10) and "Only required for Organizations, not personal accounts" (§3.13). See L1-R4-1. |
+| L1-SEC-3 (Low) | Open | `.claude/settings.json` unchanged since C1 |
+| L1-AI-1 (Low) | Open (DEP-001) | decision register unchanged |
+| L1-AI-2 (Low) | Open | `docs/ai/` absent |
+| L1-R2-2 (Medium) | Open | Repository-protection check still requires `gh`; not installed |
+| L1-R2-4 (Low) | Open (deferred by owner to the completion record) | Phase 0 document unchanged since C3 |
+| L1-R2-5 (Low) | Open (owner: no change now) | line-ending state |
+| L1-R2-6 (Info) | Applies | ACC-009 was required by this rule |
+| L1-R3-1 (Medium) | Open — **deferred** by owner (§3.13) | Tooling unchanged; compensating manual version check performed (`verification-record.md` R4.2) |
+| L1-R3-2 (Low) | Open — **deferred** by owner (§3.13) | Tooling unchanged |
+| L1-R3-3 (Low) | **Resolved** | C5 adds the whitespace-only-reformatting rule to register §2; ACC-009 accepts the register at C5 |
+| L1-R3-4 (Low) | **Resolved** | C7 commits the Run 2 and Run 3 evidence records |
+| L1-R3-5 (Info) | Applies | `scripts/verify-phase.sh` unchanged |
+| L1-R3-6 (Info) | Applies | `.github/workflows/security.yml` unchanged since C3 |
+| L1-R3-7 (Low) | Open | Phase 0 document unchanged since C3 |
+
+#### 3.15 New findings
+
+| ID | Severity | Finding | Evidence | Recommendation | Required before completion |
+| -- | -------- | ------- | -------- | -------------- | -------------------------- |
+| L1-R4-1 | Info | The L1-SEC-2 closure rests on the owner's statement that the repository is personally owned through the owner's personal GitHub account. With no remote configured, ownership cannot be verified locally. | `git remote -v` empty | Confirm the repository owner type when the remote is created. | Yes, at the remote stage |
+| L1-R4-2 | Low | `verification-record.md` Run 3 (R3.5, R3.7) still shows L1-SEC-2 as open and L1-R3-3 and L1-R3-4 as pending. The later owner dispositions are recorded only in `engineering-review.md` §3.13, and `verification-record.md` Run 3 has no cross-reference to them. As a historical record of Run 3 it is accurate. | `verification-record.md` R3.5; `engineering-review.md` §3.13 | None to Run 3 (historical records are not rewritten). Run 4 (R4.5) records the current state. | No |
+| L1-R4-3 | Info | Run 4 was performed with the repository read-only, so its evidence was not written during the run. It was recorded afterwards under a separate owner authorization. | `verification-record.md` Run 4 recording note and R4.8 | None. | No |
+
+#### 3.16 Summary
+
+- High: 0.
+- Medium open: 4 (L1-SE-1, L1-SEC-1, L1-R2-2, L1-R3-1); L1-R3-1 is deferred.
+- Low open: 12 (L1-SE-2, L1-SE-3, L1-AR-1, L1-AR-2, L1-SEC-3, L1-AI-1, L1-AI-2, L1-R2-4, L1-R2-5, L1-R3-2, L1-R3-7, L1-R4-2); L1-R3-2 is deferred.
+- Info: 5 (L1-R2-6, L1-R3-5, L1-R3-6, L1-R4-1, L1-R4-3).
+- Resolved since Run 3: L1-R3-3, L1-R3-4. Closed by owner disposition: L1-SEC-2.
+- No finding requires a consequential architectural decision. No governance contradiction remains.
