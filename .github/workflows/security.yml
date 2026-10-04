@@ -66,3 +66,71 @@ jobs:
           GITLEAKS_ENABLE_COMMENTS: "false"
           GITLEAKS_ENABLE_SUMMARY: "true"
           GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "true"
+
+      # Fail-closed full-history scan. The action above builds its scan range from the
+      # push payload and reports success when Gitleaks scans zero commits after a Git
+      # failure (for example `<root>^..<head>` on the initial push). This step scans the
+      # full history reachable from the tested commit with the pinned Gitleaks binary and
+      # fails unless the scanned commit count equals an independently computed count.
+      - name: Install pinned Gitleaks for full-history scan (checksum-verified)
+        env:
+          # Gitleaks version governed by docs/decisions/decision-register.md (DR-P0-001).
+          GITLEAKS_VERSION: "8.30.1"
+          GITLEAKS_LINUX_X64_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+        run: |
+          set -euo pipefail
+          archive="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          workdir="$(mktemp -d)"
+          curl -fsSL --retry 3 -o "${workdir}/${archive}" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${archive}"
+          echo "${GITLEAKS_LINUX_X64_SHA256}  ${workdir}/${archive}" | sha256sum -c -
+          tar -xzf "${workdir}/${archive}" -C "${workdir}" gitleaks
+          mkdir -p "${RUNNER_TEMP}/gitleaks-bin"
+          install -m 0755 "${workdir}/gitleaks" "${RUNNER_TEMP}/gitleaks-bin/gitleaks"
+          rm -rf "${workdir}"
+
+      - name: Scan full history (fail-closed)
+        env:
+          GITLEAKS_VERSION: "8.30.1"
+        run: |
+          set -euo pipefail
+          fail() { echo "RECORD|CI-FULL-HISTORY-SCAN|FAIL|STOP|$1"; exit 1; }
+
+          gl="${RUNNER_TEMP}/gitleaks-bin/gitleaks"
+          [[ -x "${gl}" ]] || fail "pinned gitleaks binary not executable: ${gl}"
+          version="$("${gl}" version 2>&1)" || fail "gitleaks version command failed"
+          [[ "${version}" == "${GITLEAKS_VERSION}" ]] || fail "gitleaks version '${version}' != ${GITLEAKS_VERSION}"
+          [[ -f .gitleaks.toml ]] || fail "missing .gitleaks.toml"
+
+          # Expected scope: every non-merge commit reachable from the tested commit,
+          # computed by Git alone (Gitleaks scans patches; merge commits carry none).
+          [[ "$(git rev-parse --is-shallow-repository)" == "false" ]] || fail "shallow clone: full history unavailable"
+          target="${GITHUB_SHA:?GITHUB_SHA is not set}"
+          git cat-file -e "${target}^{commit}" 2>/dev/null || fail "tested commit does not resolve: ${target}"
+          expected="$(git rev-list --count --no-merges "${target}")" || fail "git rev-list failed for ${target}"
+          [[ "${expected}" =~ ^[0-9]+$ ]] || fail "expected commit count is not a number: '${expected}'"
+          (( expected > 0 )) || fail "expected scope is empty"
+
+          report="${RUNNER_TEMP}/gitleaks-full-history.json"
+          log="${RUNNER_TEMP}/gitleaks-full-history.log"
+          rm -f "${report}" "${log}"
+          set +e
+          "${gl}" git --log-opts="--no-merges ${target}" --config .gitleaks.toml --redact \
+            --no-banner --no-color --log-level info --exit-code 2 \
+            --report-format json --report-path "${report}" . >"${log}" 2>&1
+          rc=$?
+          set -e
+          cat "${log}"
+
+          (( rc != 2 )) || fail "leaks detected (gitleaks exit 2)"
+          (( rc == 0 )) || fail "gitleaks exited ${rc}"
+          ! grep -qE ' (ERR|FTL) |command aborted|\[git\]' "${log}" || fail "git or scanner error reported"
+          lines="$(grep -cE ' INF [0-9]+ commits scanned\.' "${log}" || true)"
+          [[ "${lines}" == "1" ]] || fail "expected exactly one 'commits scanned' line, found ${lines}"
+          scanned="$(grep -oE ' INF [0-9]+ commits scanned\.' "${log}" | grep -oE '[0-9]+')"
+          (( scanned > 0 )) || fail "zero commits scanned"
+          (( scanned == expected )) || fail "scanned ${scanned} commits, expected ${expected}"
+          [[ -f "${report}" ]] || fail "report not written"
+          [[ "$(tr -d '[:space:]' < "${report}")" == "[]" ]] || fail "report lists findings or is malformed"
+
+          echo "RECORD|CI-FULL-HISTORY-SCAN|PASS|CONTINUE|target=${target}; expected=${expected}; scanned=${scanned}; leaks=0; exit=${rc}"
