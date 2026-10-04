@@ -1,7 +1,7 @@
 # Sentinel AI — Acceptance Register
 
 **File:** `docs/architecture/acceptance-register.md`  
-**Status:** Accepted  
+**Status:** Proposed  
 **Owner:** Project owner  
 **Authority:** Sole record of human acceptance (see `docs/architecture/documentation-authority.md`, Acceptance Model)
 
@@ -26,6 +26,7 @@ Acceptance is never inferred from implementation, review, verification, or the e
   - For a document accepted with type `status`, changing its own `**Status:**` line to `Accepted` to record that acceptance does not invalidate the acceptance.
   - For the Phase 0 document (`docs/phases/phase-0-product-and-secure-engineering-foundation.md`), changes to its lifecycle-controlled sections — Status, Status History, Final Verification, and Completion Record — do not invalidate its existing content acceptance. Those sections are part of the governed phase lifecycle and are expected to evolve.
   - For this register, adding later acceptance records and updating its lifecycle status do not invalidate previously recorded acceptance decisions. Existing records remain historical records.
+  - A whitespace-only reformatting change (for example, re-padding Markdown table columns) is non-substantive only when it does not alter the meaning, structure, executable behaviour, acceptance criteria, governance semantics, or other normative content of the accepted document. Such a change does not invalidate an existing acceptance. Any change that does not meet this condition is substantive. This rule governs acceptance validity only; it does not authorize including formatting changes in a commit outside its approved scope.
   - Any substantive content change outside the explicitly permitted lifecycle or administrative sections requires fresh acceptance of the affected document at its new version.
 - `Type` is either:
   - `status` — the document's lifecycle status is `Accepted`;
