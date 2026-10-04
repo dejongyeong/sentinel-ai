@@ -63,7 +63,7 @@ Rules:
 
 - Layers 1 and 2 are convenience and workflow controls. They are never the security boundary and never substitute for layers 3–5.
 - CI scanning (layer 3) is separate from repository protection (layer 4). CI detects; repository protection enforces at merge time.
-- Layer 4 status: not configured. The repository has no remote yet. Configuration and verification are required before Phase 0 can be Complete (see the Phase 0 document).
+- Layer 4 status: configured on main (required status check Secret scanning); verified by VER-P0-REPO-PROTECTION.
 - Gitleaks is the secret-detection tool for layers 2 and 3. The selected version is recorded in `docs/decisions/decision-register.md`.
 
 ## 7. Secret Policy
