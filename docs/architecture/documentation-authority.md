@@ -1,7 +1,7 @@
 # Sentinel AI — Documentation Authority
 
 **File:** `docs/architecture/documentation-authority.md`  
-**Status:** Proposed  
+**Status:** Accepted  
 **Owner:** Engineering  
 **Scope:** Repository-wide documentation governance
 
