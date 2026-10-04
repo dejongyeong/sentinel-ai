@@ -33,6 +33,8 @@ Compare the canonical specification, product documents, architecture documents, 
 
 ### Run 1 — 2026-10-03
 
+**Section status:** Superseded by Run 2 (re-verification at C2).
+
 - **Reviewer:** main Claude Code session (not independent)
 - **Baseline:** S1″ (`working_tree_content_hash` `9a8f9830ef6c94bcbe3ccb78869353cc44cc75c449fbf0b2bb9b95d564d78bc2`)
 - **Method:** `[REAL REPO]` read-only `grep` sweep plus the deterministic checks of verification run 1 (`VER-P0-STATUS-*`, `VER-P0-VERSIONREF-001`, `VER-P0-LIFECYCLE-001`, `VER-P0-TEMPLATE-001`)
@@ -55,3 +57,58 @@ Compare the canonical specification, product documents, architecture documents, 
 | CR-3    | Info     | Roadmap and lifecycle duplicated in the canonical specification | documentation-authority §4 | `docs/decisions/decision-register.md` DGI-001 | duplicate (already recorded) | Deferred by owner decision |
 
 No high-severity contradiction was found.
+
+### Run 2 — 2026-10-03 (re-verification at C2)
+
+**Section status:** Superseded by Run 3 (re-verification at C4).
+
+- **Reviewer:** main Claude Code session (not independent)
+- **Baseline:** C2 `b40505dc0402c17b5acc5cf5033ef0ee0c8d9421`, clean working tree (`working_tree_content_hash` `26d12208e1ef83c070432c296b27cbb9af75cf87f52a23c5d8710363276c5e36`)
+- **Method:** `[REAL REPO]` read-only `grep` sweep plus deterministic checks of verification Run 2
+
+| Check | Observed |
+| ----- | -------- |
+| Undefined status strings | none outside this record's own Run 1 method text (self-reference) |
+| Old ADR path `docs/decisions/ADR-` | none outside this record's own Run 1 method text (self-reference) |
+| Hard-coded canonical version outside versioned documents and the register | only Phase 0 document Task 0.7 (lines 332–333), which concerns v0.3 specifically — permitted |
+| Duplicated secret-incident procedure | only `docs/security/secret-incident-response.md` |
+| Documents claiming `Accepted` | v0.3 plus the five governed documents; each backed by an acceptance-register entry (`VER-P0-STATUS-DOC-001` and `VER-P0-ACCEPT-001` PASS) |
+| Status models, lifecycle, template, version references | `VER-P0-STATUS-*`, `-LIFECYCLE-001`, `-TEMPLATE-001`, `-VERSIONREF-001`: PASS / NOT APPLICABLE (ADR) |
+
+| ID   | Severity | Issue | Authority | Evidence | Classification | Remediation |
+| ---- | -------- | ----- | --------- | -------- | -------------- | ----------- |
+| CR-1 | Low  | Next.js summary in `CLAUDE.md` omits "internal domain persistence" | canonical §6 | `CLAUDE.md:68` | confirmed, unchanged from Run 1 | Not authorized in this stage |
+| CR-2 | Low  | Phase-transition BLOCKED set defined in a script constant | Phase 0 Exit Criteria | `scripts/verify-phase.sh:51` | confirmed, unchanged | Not authorized in this stage |
+| CR-3 | Info | Roadmap and lifecycle duplicated in the canonical specification | documentation-authority §4 | decision register DGI-001 | duplicate (recorded) | Deferred by owner decision |
+| CR-4 | High (completion) | CI detection criterion contradicts the never-commit rule for synthetic credentials and the local hook | Phase 0 Task 0.20 / P0-AC-021; secret-incident-response §3 | Phase 0 document line 1113; `docs/security/secret-incident-response.md:34` | requires decision | Owner decision (see `engineering-review.md` L1-R2-1) |
+| CR-5 | Medium | Repository-protection check depends on the `gh` CLI, which is unavailable | Phase 0 Task 0.17/0.20 | `scripts/verify-phase.sh:642` | requires decision | Owner decision (L1-R2-2) |
+
+No contradiction among the governing documents was introduced by C2.
+
+### Run 3 — 2026-10-04 (re-verification at C4)
+
+- **Reviewer:** main Claude Code session (not independent)
+- **Baseline:** C4 `8b833081f257eb82af26fd0991697f1e518f6287` plus the uncommitted Run 2 evidence records (`working_tree_content_hash` `fee107c5232037cf97f331b31d20d0de3d82761422b8da16a6ad6c17be1924b8`)
+- **Method:** `[REAL REPO]` read-only `grep` sweep (excluding the evidence records' own method text), deterministic checks of verification Run 3, and acceptance/version checks
+
+| Check | Observed |
+| ----- | -------- |
+| Undefined status strings | none |
+| Old ADR path `docs/decisions/ADR-` | none |
+| Hard-coded canonical version outside versioned documents and the register | only Phase 0 document Task 0.7 (lines 332–333) — permitted |
+| Duplicated secret-incident procedure | only `docs/security/secret-incident-response.md` |
+| Documents claiming `Accepted` | v0.3 plus the five governed documents; each backed by a register entry whose version relationship holds (Run 3 acceptance checks) |
+| CI criterion vs never-commit rule | P0-AC-021 and Task 0.20 Tests now require a runtime fixture outside the checkout; no requirement to commit a secret |
+| Exit criteria vs P0-AC-025 | consistent: both admit a permitted BLOCKED Layer 2 reviewer |
+
+| ID   | Severity | Issue | Classification | Remediation |
+| ---- | -------- | ----- | -------------- | ----------- |
+| CR-1 | Low | `CLAUDE.md:68` Next.js summary omits "internal domain persistence" | confirmed, unchanged | Not authorized in this stage |
+| CR-2 | Low | Phase-transition BLOCKED set defined in a script constant | confirmed, unchanged | Not authorized in this stage |
+| CR-3 | Info | Roadmap and lifecycle duplicated in the canonical specification (DGI-001) | duplicate (recorded) | Deferred by owner decision |
+| CR-4 | — | CI detection criterion vs never-commit rule | **resolved** in C3 (accepted by ACC-008) | — |
+| CR-5 | Medium | Repository-protection check depends on the unavailable `gh` CLI | confirmed, unchanged; requires decision | Owner decision (L1-R2-2) |
+| CR-6 | Low | "Substantive content change" undefined for whitespace-only reformatting | ambiguity; requires decision | Owner decision (L1-R3-3) |
+| CR-7 | Low | Tasks say content is assessed by both review layers although Layer 2 is permissibly BLOCKED | wording overstatement | Future governed revision (L1-R3-7) |
+
+No governance contradiction remains among the governing documents at C4.
