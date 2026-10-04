@@ -394,6 +394,8 @@ The S2 snapshot for this run is captured after this section is written; its inte
 
 ### Run 4 — 2026-10-04 (fresh verification at C7)
 
+**Section status:** Superseded by Run 6 (verification at C9).
+
 **Authorization:** the owner authorized a fresh Phase 0 verification against C7, with the repository read-only during the run. The owner then separately authorized recording the Run 4 evidence, after reviewing and accepting the Run 4 result.
 **Baseline:** C7 `b71fd858cf0530f9aae31770cd58171017d70426`.
 - Ancestry: C6 `b80a40af9c79d6e0b59acccdef589ee3f0b31eca`, C5 `24d1c63587066197f0f3b6fb1add32f1f1b8cf19`, C4 `8b833081…`, C3 `5d89f3cf…`, C2 `b40505dc…`, root C1 `a6d58ce0…`.
@@ -556,5 +558,188 @@ This re-run evaluated the records with every Run 4 section written except this R
 The gate is not relaxed. It requires:
 - S1 to S2 changes limited to the four evidence records;
 - every other path byte-identical to C7;
+- commit count and remotes unchanged;
+- both snapshot methods agreeing.
+
+### Run 6 — 2026-10-04 (verification at C9)
+
+**Authorization:** the owner authorized a read-only Phase 0 verification at C9 using CI run `37204397037`. After reviewing the result, the owner separately authorized recording the Run 6 evidence. Run 5, a read-only post-C8 check, was not recorded. Run 6 supersedes Run 4.
+
+**Baseline:** C9 `1b90511756e66620c00c87e14943324529d2922f`.
+- Ancestry: C8 `856979659db02757f5c06441c04b3677b3c2cf6c`, C7 `b71fd858…`, C6 `b80a40af…`, C5 `24d1c635…`, C4 `8b833081…`, C3 `5d89f3cf…`, C2 `b40505dc…`, root C1 `a6d58ce0…`.
+- 9 commits; clean working tree.
+- Remote `origin` = `https://github.com/dejongyeong/sentinel-ai.git`; remote `main` = C9.
+- S0 (2026-10-04T13:16:58Z) and S1 (13:17:00Z) were captured with both methods: 56 files, `working_tree_content_hash` `e56e7da2db09c1e179a695b3a4e555e12a7347bded1d79ba7635ffe15efe02e6`. S0 equals S1, and both equal the C9 tree.
+
+**Run header (from `scripts/verify-phase.sh`):**
+- 2026-10-04T13:17:01Z; `commit_count` 9; remote `origin`.
+- Command: `[REAL REPO] bash scripts/verify-phase.sh phase-0 --baseline <scratchpad>/R6-S1.snapshot.json --json-out <scratchpad>/verify-R6a.json --ci-run-url https://github.com/dejongyeong/sentinel-ai/actions/runs/37204397037 --ci-run-detected yes`; exit 0.
+- PASS=20, FAIL=0, BLOCKED=1, NOT APPLICABLE=2; process_action=CONTINUE; `D1_SCRIPT_CONDITIONS=met`.
+
+**Recording note:** Run 6 was performed with the repository read-only. Its run-phase S1→S2 comparison was identical (R6.6). This section was written afterwards under the separate recording authorization; R6.8 accounts for it.
+
+#### R6.1 Deterministic checks
+
+| VER ID | Result | Process action | Evidence / reason |
+| ------ | ------ | -------------- | ----------------- |
+| VER-P0-DOCS-001 | PASS | CONTINUE | 52 required files present |
+| VER-P0-STATUS-DOC-001 | PASS | CONTINUE | 24 authority documents conform |
+| VER-P0-STATUS-ADR-001 | NOT APPLICABLE | CONTINUE | Applicability false: no ADR files |
+| VER-P0-STATUS-PHASE-001 | PASS | CONTINUE | 1 phase document conforms |
+| VER-P0-STATUS-RECORD-001 | PASS | CONTINUE | 4 evidence records conform |
+| VER-P0-LIFECYCLE-001 | PASS | CONTINUE | Status matches history; all transitions permitted |
+| VER-P0-ACCEPT-001 | PASS | CONTINUE | All six gate conditions hold (path-level check; the version relationship is verified in R6.2) |
+| VER-P0-TEMPLATE-001 | PASS | CONTINUE | 25 tasks have all nine sections in order |
+| VER-P0-VERSIONREF-001 | PASS | CONTINUE | 18 generic governance files resolve the version through the canonical README |
+| VER-P0-CLAUDE-001 | PASS | CONTINUE | 102 lines; required sections; no hard-coded version |
+| VER-P0-SKILLS-001 | PASS | CONTINUE | 5 skills conform |
+| VER-P0-AGENTS-CONFIG-001 | PASS | CONTINUE | 5 reviewer agents conform (configuration only) |
+| VER-P0-FORMAT-001 | NOT APPLICABLE | CONTINUE | Phase 0 formatter contract not established; formatter selection belongs to Phase 1 |
+| VER-P0-HOOKS-001 | PASS | CONTINUE | 27 hook fixtures behaved as expected |
+| VER-P0-GITLEAKS-NEG | PASS | CONTINUE | Clean scans exit 0 before and after |
+| VER-P0-GITLEAKS-POS | PASS | CONTINUE | Synthetic token detected (exit 1, rule `github-pat`); 0 repository occurrences (local execution) |
+| VER-P0-GITLEAKS-HISTORY | PASS | CONTINUE | `gitleaks git --redact` exit 0 over C1–C9 |
+| VER-P0-PRECOMMIT-NEG | PASS | CONTINUE | `[TEMP REPO]` 56 files copied and staged; hooks pass; clean commit succeeds |
+| VER-P0-PRECOMMIT-POS | PASS | CONTINUE | `[TEMP REPO]` gitleaks hook rc=1, all hooks rc=1, commit rejected, 0 commits |
+| VER-P0-CI-CONFIG | PASS | CONTINUE | Static configuration conforms (not operational verification) |
+| VER-P0-CI-EXEC | PASS | CONTINUE | `run https://github.com/dejongyeong/sentinel-ai/actions/runs/37204397037: detection demonstrated=True`. This is an orchestration attestation; its basis is in R6.3. |
+| VER-P0-REPO-PROTECTION | BLOCKED | CONTINUE | Prerequisite false: repository host settings not inspectable (`gh` CLI unavailable) |
+| VER-P0-GIT-SAFETY-001 (script part) | PASS | CONTINUE | commit_count=9; remotes unchanged; no change since S1 at script time |
+
+The only change from Run 4 R4.1 is `VER-P0-CI-EXEC`, which went from BLOCKED to PASS.
+
+#### R6.2 Acceptance/version checks (orchestration, `[REAL REPO]` read-only)
+
+**History:** C9 → C8 → C7 → C6 → C5 → C4 → C3 → C2 → C1 (root); 9 commits.
+
+**Commit scopes:**
+- C8 touches only the four evidence records.
+- C9 touches only `.github/workflows/security.yml`: one hunk, 68 lines added, 0 deleted.
+- No other path changed from C8 to C9.
+
+**Acceptance entries:**
+- **ACC-001:** v0.3 is unchanged (`b81d2d9f87b5d166751d64153d536ed5349e7acd`).
+- **ACC-002 to ACC-005:** each document changed after C1 only by its own `**Status:**` line.
+- **ACC-007 and ACC-008:** the Phase 0 document is unchanged from C3 to HEAD.
+- **ACC-009:** the register is unchanged from C6 to HEAD. ACC-001 to ACC-008 are byte-identical to C4, and ACC-009 references C5 `24d1c63587066197f0f3b6fb1add32f1f1b8cf19`.
+
+**Other checks:**
+- `scripts/`, `.claude/`, `.gitleaks.toml` and `.pre-commit-config.yaml` are unchanged since C3.
+- No ADR files.
+- The evidence records are unchanged from C8 to HEAD at run time.
+
+**C9 in governance terms:** C9 is the owner-authorized R1 fail-closed correction, classified by the owner as an ordinary fix under `docs/decisions/README.md` §3, with no ADR and no fresh acceptance. It changes none of the following:
+- job names, triggers, permissions, the pinned `gitleaks/gitleaks-action` SHA, or `GITLEAKS_VERSION`;
+- P0-AC-020, P0-AC-021 or P0-AC-022;
+- branch protection or the verification machinery.
+
+`VER-P0-CI-CONFIG` passes on it.
+
+#### R6.3 CI execution evidence (P0-AC-021)
+
+**Historical run `37173065284` (C8): FAIL. Cited here, not altered.**
+- The positive and negative controls passed.
+- The repository scan given the range `C1^..C8` scanned 0 commits after a Git revision-range failure, yet concluded success.
+- See L1-R6-1 (`engineering-review.md` Run 6).
+
+**Run `37204397037` (C9).** Metadata observed through the GitHub API during Run 6:
+- event `push`, branch `main`, `head_sha` `1b90511756e66620c00c87e14943324529d2922f`, `completed`/`success`, attempt 1;
+- job `111442460154` `Secret scanning positive control` and job `111442460382` `Secret scanning` both `success`, with every step `success`, including `Scan full history (fail-closed)`.
+
+**Log lines** (manually observed and transcribed by the owner from the authenticated GitHub Actions UI; not read by `verify-phase.sh` or by the orchestrator):
+- `RECORD|VER-P0-GITLEAKS-NEG|PASS|CONTINUE|clean scan exit codes: before=0 after=0`
+- `RECORD|VER-P0-GITLEAKS-POS|PASS|CONTINUE|positive scan exit=1; report=RULES:github-pat; repo occurrences=0`
+- `RECORD|CI-FULL-HISTORY-SCAN|PASS|CONTINUE|target=1b90511756e66620c00c87e14943324529d2922f; expected=9; scanned=9; leaks=0; exit=0`
+- The existing `gitleaks/gitleaks-action` step: `1 commits scanned.` with `--log-opts=-1`, followed by `no leaks found`.
+
+**Two distinct scan scopes.** These are not contradictory:
+- The action scans the push-event scope. For a single-commit push the action selects `--log-opts=-1`, which gives 1 commit.
+- The R1 guard independently scans the full reachable non-merge history from `GITHUB_SHA`: 9 commits, matching Git's independent count.
+
+**Implementation properties** (established by inspecting `scripts/checks/gitleaks-controls.sh`, not observed in the log): the positive-control fixture is generated at runtime, in a temporary directory outside the checkout guarded by FAIL/STOP, and removed on exit.
+
+**Attestation:** `--ci-run-detected yes` is an orchestration attestation based on the transcribed log lines and the API-observed metadata above. `verify-phase.sh` did not read the GitHub log.
+
+**Assessment:** both parts of P0-AC-021 are evidenced by run `37204397037`. `VER-P0-CI-EXEC` is recorded PASS.
+
+#### R6.4 Layer 1 and Layer 2 review
+
+| VER ID | Result | Process action | Evidence / reason |
+| ------ | ------ | -------------- | ----------------- |
+| VER-P0-REVIEW-L1 | PASS | CONTINUE | `engineering-review.md` Run 6 and `contradiction-review.md` Run 6. Performed and recorded with the required fields; not independent. 0 High; 4 Medium open (1 deferred); 12 Low open (1 deferred); 4 Info. L1-R6-1 (Medium) recorded as Resolved; L1-R4-1 Resolved. |
+| VER-P0-REVIEW-L2-RUNTIME-architecture-reviewer | BLOCKED | CONTINUE | Reported surface `Read, Grep, Glob, SubagentHandback` is not a subset of {Read, Grep, Glob}; reviewer not run |
+| VER-P0-REVIEW-L2-RUNTIME-security-reviewer | BLOCKED | CONTINUE | same |
+| VER-P0-REVIEW-L2-RUNTIME-ai-engineering-reviewer | BLOCKED | CONTINUE | same |
+| VER-P0-REVIEW-L2-RUNTIME-verification-reviewer | BLOCKED | CONTINUE | same |
+| VER-P0-REVIEW-L2-RUNTIME-documentation-reviewer | BLOCKED | CONTINUE | same |
+
+The Layer 2 results are permitted BLOCKED states and members of `TRANSITION_PERMITTED_BLOCKED`, not PASS. No independent review was performed (`independent-review.md` Run 6).
+
+#### R6.5 Repository protection (orchestration observation)
+
+`VER-P0-REPO-PROTECTION` is BLOCKED because the verifier requires `gh` (L1-R2-2).
+
+Observed through the public GitHub API during Run 6; this is not verifier output:
+- `main` is `protected: true`;
+- `required_status_checks.contexts` = `["Secret scanning"]` (app 15368), with `enforcement_level` `non_admins`;
+- no rulesets;
+- repository owner type `User`; visibility public.
+
+The settings beyond required status checks are not readable without authentication.
+
+**Observation, not a finding:** with `non_admins` enforcement, the owner's admin push of C9 bypassed the required check, and the check then ran and succeeded. This is not a defect in the C9 change. No governing requirement currently requires admin enforcement.
+
+#### R6.6 Git safety and S2 integrity gate (run phase)
+
+**Git safety:**
+- `[REAL REPO]` commands executed by orchestration were all read-only: `git status`, `git rev-parse`, `git rev-list`, `git log`, `git diff` and `git show` between commits, `git ls-files`, `git ls-tree`, `git hash-object --stdin-paths` (without `-w`), `git remote -v`, `git ls-remote`, `git stash list`; plus `grep`, `gitleaks dir . --redact` (exit 0) and read-only GitHub API GETs.
+- There was no `add`, `commit`, `push`, `fetch`, `reset`, `clean`, `stash`, or remote or settings change during the run.
+- The hook-bypass flag was not used.
+- Commits occurred only in `[TEMP REPO]` repositories created by the pre-commit controls.
+
+**S2 integrity gate:** S2 was captured at 2026-10-04T13:18:22Z.
+- S1→S2 was identical: no added, changed or removed files.
+- Commit count 9→9; remotes equal; S0, S1 and S2 manifests equal and equal to the C9 tree.
+- Local HEAD, `origin/main` and remote `main` are all C9.
+- **Result: PASS.**
+
+#### R6.7 Transition evaluation
+
+- Phase 0 is in `Verification`. There is no FAIL and no STOP.
+- `Verification` → `Complete` is **not eligible**:
+  - `VER-P0-REPO-PROTECTION` is BLOCKED (`gh` dependency, L1-R2-2);
+  - the Final Verification and Completion Record are not written (L1-R2-4);
+  - no completion decision is recorded.
+- `VER-P0-CI-EXEC` is PASS, and `VER-P0-ACCEPT-001` holds at the version level (ACC-001 to ACC-009).
+- Phase 0 status is unchanged: `Verification`.
+
+**Remaining prerequisites before completion:**
+1. The owner's decision on L1-R2-2, so that `VER-P0-REPO-PROTECTION` can be evaluated.
+2. The Final Verification and Completion Record.
+3. The owner's completion decision.
+
+#### R6.8 Evidence recording, re-verification (VER-P0-REVERIFY-006) and recording-phase S2 integrity gate
+
+**What changed.** Recording Run 6 changed the four evidence records, which are inputs of `VER-P0-STATUS-RECORD-001` and of `VER-P0-GIT-SAFETY-001`. Each record gained:
+- a `Superseded by Run 6` marker on its Run 4 section;
+- the Run 6 section, appended.
+
+No other line was changed or removed, and no other file changed. Run 5 was not recorded. The R6.6 gate (S1→S2 identical) describes the read-only run phase. It is not a claim about the recording phase.
+
+**Re-verification.** The deterministic suite was re-run against the same Run 6 S1 baseline, with the same CI arguments, at 2026-10-04T13:22:24Z.
+- Command: `[REAL REPO] bash scripts/verify-phase.sh phase-0 --baseline <scratchpad>/R6-S1.snapshot.json --json-out <scratchpad>/verify-R6b.json --ci-run-url https://github.com/dejongyeong/sentinel-ai/actions/runs/37204397037 --ci-run-detected yes`; exit 0.
+- Totals: PASS=20, FAIL=0, BLOCKED=1, NOT APPLICABLE=2; process_action=CONTINUE.
+- All 23 check IDs, results and process actions are identical to R6.1.
+- `VER-P0-STATUS-RECORD-001` passes on the updated records.
+- `VER-P0-GIT-SAFETY-001` (script part) passes, with changes since S1 limited to the four evidence records.
+- **The R6.1 deterministic results are `Superseded` by this re-run.**
+
+This re-run evaluated the records with every Run 6 section written except this R6.8 section, which was appended afterwards.
+
+**Recording-phase S2.** The recording-phase S2 snapshot is captured after this section is written. A confirming run of the suite on that final state accompanies it. Both results are reported to the owner and stored outside the repository.
+
+The gate is not relaxed. It requires:
+- S1 to S2 changes limited to the four evidence records;
+- every other path byte-identical to C9;
 - commit count and remotes unchanged;
 - both snapshot methods agreeing.

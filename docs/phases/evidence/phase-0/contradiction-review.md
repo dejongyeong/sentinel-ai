@@ -117,6 +117,8 @@ No governance contradiction remains among the governing documents at C4.
 
 ### Run 4 — 2026-10-04 (fresh verification at C7)
 
+**Section status:** Superseded by Run 6 (verification at C9).
+
 - **Reviewer:** main Claude Code session (not independent)
 - **Baseline:** C7 `b71fd858cf0530f9aae31770cd58171017d70426`, clean working tree (`working_tree_content_hash` `7e31b10f1712bbfe96eb73874755bc929c1b2405385c7f19de3ddac943f72398`)
 - **Method:**
@@ -146,3 +148,34 @@ No governance contradiction remains among the governing documents at C4.
 | CR-7 | Low | Tasks say content is assessed by both review layers although Layer 2 is permissibly BLOCKED | wording overstatement, unchanged | Future governed revision (L1-R3-7) |
 
 No governance contradiction remains among the governing documents at C7.
+
+### Run 6 — 2026-10-04 (verification at C9)
+
+- **Reviewer:** main Claude Code session (not independent)
+- **Baseline:** C9 `1b90511756e66620c00c87e14943324529d2922f`, clean working tree (`working_tree_content_hash` `e56e7da2db09c1e179a695b3a4e555e12a7347bded1d79ba7635ffe15efe02e6`)
+- **Method:**
+  - deterministic checks of verification Run 6;
+  - acceptance/version and commit-scope checks (`verification-record.md` R6.2);
+  - a consistency check of the C9 workflow change against `docs/architecture/security-architecture.md` §6 and P0-AC-020 to P0-AC-022.
+- No new `git grep` sweep was run. The governing documents are unchanged since the Run 4 sweep, because C8 changed only evidence records and C9 only `.github/workflows/security.yml`.
+
+| Check | Observed |
+| ----- | -------- |
+| Governing documents changed since Run 4 | none (C8: evidence records only; C9: `.github/workflows/security.yml` only) |
+| Documents claiming `Accepted` | v0.3 plus the five governed documents; each is backed by a register entry whose version relationship holds (Run 6 acceptance checks) |
+| `security-architecture.md` §6 layer 3 control ("`.github/workflows/security.yml` (Gitleaks action)") vs C9 | consistent: the pinned Gitleaks action remains; C9 adds a fail-closed full-history scan step to the same job |
+| P0-AC-020 (pinned SHAs, permissions, triggers, fetch depth, Gitleaks version) vs C9 | consistent: `VER-P0-CI-CONFIG` PASS (Run 6) |
+| P0-AC-022 (protection requires the CI security check) vs C9 | consistent: the job name `Secret scanning` is unchanged |
+| Generic version references and status models | `VER-P0-VERSIONREF-001`, `VER-P0-STATUS-DOC-001`, `VER-P0-STATUS-PHASE-001`, `VER-P0-STATUS-RECORD-001` PASS (Run 6) |
+
+| ID   | Severity | Issue | Classification | Remediation |
+| ---- | -------- | ----- | -------------- | ----------- |
+| CR-1 | Low | `CLAUDE.md:68` Next.js summary omits "internal domain persistence" | confirmed, unchanged | Not authorized in this stage |
+| CR-2 | Low | Phase-transition BLOCKED set defined in a script constant | confirmed, unchanged | Not authorized in this stage |
+| CR-3 | Info | Roadmap and lifecycle duplicated in the canonical specification (DGI-001) | duplicate (recorded) | Deferred by owner decision |
+| CR-4 | — | CI detection criterion vs never-commit rule | resolved in C3 (accepted by ACC-008) | — |
+| CR-5 | Medium | Repository-protection check depends on the unavailable `gh` CLI | confirmed, unchanged | Owner decision (L1-R2-2) |
+| CR-6 | — | "Substantive content change" undefined for whitespace-only reformatting | resolved in C5 (accepted by ACC-009) | — |
+| CR-7 | Low | Tasks say content is assessed by both review layers although Layer 2 is permissibly BLOCKED | wording overstatement, unchanged | Future governed revision (L1-R3-7) |
+
+No governance contradiction remains among the governing documents at C9.

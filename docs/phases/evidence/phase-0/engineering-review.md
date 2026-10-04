@@ -186,6 +186,8 @@ Severity scale: **High** blocks the Verification transition; **Medium** must be 
 
 ### Run 4 — 2026-10-04 (fresh verification at C7)
 
+**Section status:** Superseded by Run 6 (verification at C9).
+
 - **Reviewer:** main Claude Code session (implementer; not independent)
 - **Baseline:**
   - C7 `b71fd858cf0530f9aae31770cd58171017d70426` (C6 `b80a40af…`, C5 `24d1c635…`, C4 `8b833081…`, C3 `5d89f3cf…`, C2 `b40505dc…`, C1 `a6d58ce0…`)
@@ -242,4 +244,64 @@ Run 3 rows and the §3.13 dispositions are historical and unchanged. This table 
 - Low open: 12 (L1-SE-2, L1-SE-3, L1-AR-1, L1-AR-2, L1-SEC-3, L1-AI-1, L1-AI-2, L1-R2-4, L1-R2-5, L1-R3-2, L1-R3-7, L1-R4-2); L1-R3-2 is deferred.
 - Info: 5 (L1-R2-6, L1-R3-5, L1-R3-6, L1-R4-1, L1-R4-3).
 - Resolved since Run 3: L1-R3-3, L1-R3-4. Closed by owner disposition: L1-SEC-2.
+- No finding requires a consequential architectural decision. No governance contradiction remains.
+
+### Run 6 — 2026-10-04 (verification at C9)
+
+- **Reviewer:** main Claude Code session (implementer; not independent)
+- **Baseline:**
+  - C9 `1b90511756e66620c00c87e14943324529d2922f` (C8 `85697965…`, C7 `b71fd858…`, C1 `a6d58ce0…`)
+  - clean working tree; `working_tree_content_hash` `e56e7da2db09c1e179a695b3a4e555e12a7347bded1d79ba7635ffe15efe02e6`
+  - `commit_count` 9; remote `origin`
+- **Inputs:**
+  - the repository at C9;
+  - the deterministic suite at 2026-10-04T13:17:01Z (`verification-record.md` Run 6);
+  - the CI evidence for runs `37173065284` and `37204397037` (`verification-record.md` R6.3);
+  - acceptance/version checks (R6.2);
+  - the contradiction review (`contradiction-review.md` Run 6).
+- **Timestamp (UTC):** 2026-10-04T13:18Z
+- Run 5 (read-only, post-C8) was not recorded. This table carries forward from Run 4 §3.14–§3.16.
+
+#### 3.17 Status of earlier findings
+
+| ID | Run 6 status | Evidence |
+| -- | ------------ | -------- |
+| L1-SE-1 (Medium) | Open | `scripts/` unchanged since C1 |
+| L1-SE-2 (Low) | Open | `scripts/` unchanged since C1 |
+| L1-SE-3 (Low) | Open (known) | `.claude/` unchanged since C1 |
+| L1-AR-1 (Low) | Open | `CLAUDE.md` unchanged since C1 |
+| L1-AR-2 (Low) | Open | `scripts/verify-phase.sh` unchanged since C1 |
+| L1-SEC-1 (Medium) | Open | `VER-P0-CI-EXEC` is now PASS (run `37204397037`); `VER-P0-REPO-PROTECTION` remains BLOCKED |
+| L1-SEC-2 (Medium) | Closed (owner disposition, §3.13) | Unchanged |
+| L1-SEC-3 (Low) | Open | `.claude/settings.json` unchanged since C1 |
+| L1-AI-1 (Low) | Open (DEP-001) | decision register unchanged |
+| L1-AI-2 (Low) | Open | `docs/ai/` absent |
+| L1-R2-2 (Medium) | Open | The repository-protection check still requires `gh`, which is not installed. Protection itself is configured (`verification-record.md` R6.5). |
+| L1-R2-4 (Low) | Open (deferred by owner to the completion record) | Phase 0 document unchanged since C3 |
+| L1-R2-5 (Low) | Open (owner: no change now) | line-ending state |
+| L1-R2-6 (Info) | Applies | Unchanged |
+| L1-R3-1 (Medium) | Open — deferred by owner (§3.13) | Tooling unchanged; manual version check performed (`verification-record.md` R6.2) |
+| L1-R3-2 (Low) | Open — deferred by owner (§3.13) | Tooling unchanged |
+| L1-R3-5 (Info) | Applies; satisfied for run `37204397037` | The `VER-P0-CI-EXEC` attestation is based on the authenticated log lines (`verification-record.md` R6.3), not on the job conclusion |
+| L1-R3-6 (Info) | Applies | The runtime Gitleaks download dependency now also applies to the C9 `Install pinned Gitleaks for full-history scan (checksum-verified)` step; integrity is still pinned by SHA-256 |
+| L1-R3-7 (Low) | Open | Phase 0 document unchanged since C3 |
+| L1-R4-1 (Info) | **Resolved** | The GitHub API reports `owner.type` `User` for `dejongyeong/sentinel-ai`, consistent with the owner's statement of personal ownership |
+| L1-R4-2 (Low) | Open | Historical Run 3 record; unchanged |
+| L1-R4-3 (Info) | Applies | Historical; Run 6 evidence is likewise recorded after a read-only run |
+
+#### 3.18 New findings
+
+| ID | Severity | Finding | Evidence | Status | Required before completion |
+| -- | -------- | ------- | -------- | ------ | -------------------------- |
+| L1-R6-1 | Medium | The CI repository secret scan failed open on the initial push: gitleaks-action built the range `<root>^..<head>` (C1^..C8), Git could not resolve it, Gitleaks 8.30.1 scanned 0 commits and exited 0, and the required `Secret scanning` check concluded success (run 37173065284; reproduced locally). | Run 37173065284 job 111349828832 log (owner-transcribed); local reproduction; pinned action source | **Resolved** by C9 `1b90511756e66620c00c87e14943324529d2922f` (fail-closed full-history guard); observed PASS in run 37204397037 (`expected=9; scanned=9; leaks=0`) | No (resolved) |
+
+Severity rationale: at discovery, the defect made a completion gate (P0-AC-021 / `VER-P0-CI-EXEC`) unsatisfiable, and it let the required check pass without scanning. It did not affect the Verification transition. That makes it Medium.
+
+#### 3.19 Summary
+
+- High: 0.
+- Medium open: 4 (L1-SE-1, L1-SEC-1, L1-R2-2, L1-R3-1); L1-R3-1 is deferred.
+- Low open: 12 (L1-SE-2, L1-SE-3, L1-AR-1, L1-AR-2, L1-SEC-3, L1-AI-1, L1-AI-2, L1-R2-4, L1-R2-5, L1-R3-2, L1-R3-7, L1-R4-2); L1-R3-2 is deferred.
+- Info applying: 4 (L1-R2-6, L1-R3-5, L1-R3-6, L1-R4-3).
+- Resolved since Run 4: L1-R4-1, and L1-R6-1, which was found and resolved within this cycle.
 - No finding requires a consequential architectural decision. No governance contradiction remains.
