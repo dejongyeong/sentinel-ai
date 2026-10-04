@@ -1,7 +1,7 @@
 # Sentinel AI — Documentation Authority
 
 **File:** `docs/architecture/documentation-authority.md`  
-**Status:** Accepted  
+**Status:** Proposed  
 **Owner:** Engineering  
 **Scope:** Repository-wide documentation governance
 
@@ -160,7 +160,7 @@ To determine the current canonical specification:
 4. Verify that the specification itself has status `Accepted`.
 5. Use that version as the current canonical engineering baseline.
 
-A document must not assume that v0.3 remains current.
+A document must not assume that any specific canonical version remains current.
 
 ---
 
@@ -627,11 +627,11 @@ Rules:
 - Evidence records: `Pending` (not yet executed), `Recorded` (results recorded), `Superseded` (replaced by a later run). An evidence record never states or implies a phase lifecycle status.
 - Verification **results** (`PASS` / `FAIL` / `BLOCKED` / `NOT APPLICABLE`) are not lifecycle statuses and are never used as document statuses.
 
-### v0.3 and subject-specific documents
+### Canonical specification and subject-specific documents
 
-> v0.3 is the accepted cross-cutting engineering baseline. Subject-specific documents own their respective subjects. A subject-specific document may have an independent lifecycle status. A Proposed subject-specific document does not invalidate an accepted decision already recorded in v0.3; it means that the document itself has not yet been formally accepted as the maintained subject-specific representation.
+> The current Accepted canonical specification is the cross-cutting engineering baseline. Subject-specific documents own their respective subjects. A subject-specific document may have an independent lifecycle status. A Proposed subject-specific document does not invalidate an accepted decision already recorded in the current Accepted canonical specification; it means that the document itself has not yet been formally accepted as the maintained subject-specific representation.
 
-A Proposed subject-specific document doesn't undo a decision v0.3 already accepted, and v0.3 doesn't take over those subjects.
+A Proposed subject-specific document doesn't undo a decision the current Accepted canonical specification already accepted, and that specification doesn't take over those subjects.
 
 This rule refers to the canonical version identified as current by `docs/architecture/canonical-specification/README.md`.
 
