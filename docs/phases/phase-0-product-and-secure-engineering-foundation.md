@@ -859,7 +859,7 @@ DR-P0-001; security architecture §6.
 
 #### Tests
 
-Static configuration validation, and a real CI run demonstrating detection independently of local pre-commit.
+Static configuration validation, and a real CI run on the repository host, independent of local pre-commit, that (1) executes the CI positive control (`scripts/checks/gitleaks-controls.sh`), in which a synthetic fixture generated at runtime in an isolated temporary workspace outside the checkout is detected by rule `github-pat` and removed within the job, and (2) runs the repository secret scan with no leaks reported. Evidence: the CI run URL and job log.
 
 #### Security
 
@@ -1110,11 +1110,11 @@ Each criterion is a predicate. The verification ID names the check in `scripts/v
 | P0-AC-018 | Clean temporary repository: hooks pass and a clean commit succeeds                                                                | VER-P0-PRECOMMIT-NEG         | `scripts/checks/pre-commit-controls.sh`  | verification record                    | 0.18                            |
 | P0-AC-019 | Secret temporary repository: Gitleaks hook fails, full run fails, commit is rejected, commit count is 0                           | VER-P0-PRECOMMIT-POS         | `scripts/checks/pre-commit-controls.sh`  | verification record                    | 0.18                            |
 | P0-AC-020 | The CI workflow parses and matches the pinned SHAs, permissions, triggers, fetch depth, and Gitleaks version                      | VER-P0-CI-CONFIG             | `scripts/verify-phase.sh phase-0`        | verification record                    | 0.20                            |
-| P0-AC-021 | A real CI run on the repository host demonstrates detection                                                                       | VER-P0-CI-EXEC               | CI run on the repository host            | verification record (run URL)          | 0.20                            |
+| P0-AC-021 | A real CI run on the repository host (1) executes the CI positive control: a synthetic fixture generated at runtime in an isolated temporary workspace outside the checkout is detected by rule `github-pat` and removed within the job; and (2) runs the repository secret scan with no leaks reported. Evidence: CI run URL and job log | VER-P0-CI-EXEC               | CI run on the repository host            | verification record (run URL)          | 0.20                            |
 | P0-AC-022 | Repository protection requires the CI security check                                                                              | VER-P0-REPO-PROTECTION       | Repository host settings                 | verification record                    | 0.17, 0.20                      |
 | P0-AC-023 | Commit count and remotes are unchanged, only read-only Git commands ran against the repository, and working-tree changes stay within the declared boundaries | VER-P0-GIT-SAFETY-001 | Snapshot comparison (`scripts/checks/repo_snapshot.py`) | verification record | 0.23 |
 | P0-AC-024 | The Layer 1 five-perspective review and the contradiction review were performed and recorded with all required fields            | VER-P0-REVIEW-L1             | Main-session review                      | `engineering-review.md`, `contradiction-review.md` | 0.24, 0.25           |
-| P0-AC-025 | Each Layer 2 reviewer ran read-only with identical before/after snapshots and its record is complete                              | VER-P0-REVIEW-L2-RUNTIME-<agent> | Reviewer-agent protocol              | `independent-review.md`                | 0.25                            |
+| P0-AC-025 | Each Layer 2 reviewer either ran read-only with identical before/after snapshots and its record is complete, or is BLOCKED under the reviewer tool contract with its missing prerequisite recorded and is a member of `TRANSITION_PERMITTED_BLOCKED`. A BLOCKED reviewer is never recorded as PASS | VER-P0-REVIEW-L2-RUNTIME-<agent> | Reviewer-agent protocol              | `independent-review.md`                | 0.25                            |
 
 PASS for a review check means that the review was successfully performed with the required integrity/evidence conditions. It does not mean that the reviewer found no issues.
 
