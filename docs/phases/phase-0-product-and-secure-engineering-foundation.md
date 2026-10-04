@@ -1228,6 +1228,8 @@ No commit may occur in the real repository during a verification run (`docs/phas
 | 2026-10-03 | —               | Not Started | Phase created                                                                                      | Initial phase document                     |
 | 2026-10-03 | Not Started     | In Progress | Phase 0 work commenced; transition recorded retrospectively during Phase 0 remediation (decision M1) | Phase 0 deliverables present in repository |
 | 2026-10-03 | In Progress     | Verification | Transition rule satisfied by verification run 1 and re-verification (no FAIL; only permitted BLOCKED; no STOP); completion gates CI-EXEC, REPO-PROTECTION and ACCEPT-001 remain BLOCKED | `docs/phases/evidence/phase-0/verification-record.md` Run 1, §3.6–§3.7 |
+| 2026-10-04 | Verification    | In Progress | Required verification failed: CI run 37173065284 on C8 `856979659db02757f5c06441c04b3677b3c2cf6c` did not satisfy P0-AC-021 (the repository secret scan scanned 0 commits after a Git revision-range failure yet reported success); remediated by C9 `1b90511756e66620c00c87e14943324529d2922f` (fail-closed full-history scan). Recorded retrospectively by owner lifecycle determination (2026-10-04) | `docs/phases/evidence/phase-0/verification-record.md` Run 6, R6.3; `docs/phases/evidence/phase-0/engineering-review.md` Run 6, L1-R6-1 |
+| 2026-10-04 | In Progress     | Verification | Transition rule satisfied by verification Run 6 at C9 (no FAIL; only permitted BLOCKED; no STOP). Recorded retrospectively by owner lifecycle determination (2026-10-04) | `docs/phases/evidence/phase-0/verification-record.md` Run 6, R6.1–R6.8 |
 
 Status history is append-only.
 
