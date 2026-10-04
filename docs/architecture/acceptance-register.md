@@ -1,7 +1,7 @@
 # Sentinel AI — Acceptance Register
 
 **File:** `docs/architecture/acceptance-register.md`  
-**Status:** Proposed  
+**Status:** Accepted  
 **Owner:** Project owner  
 **Authority:** Sole record of human acceptance (see `docs/architecture/documentation-authority.md`, Acceptance Model)
 
@@ -47,3 +47,4 @@ Acceptance is never inferred from implementation, review, verification, or the e
 | ACC-006 | `docs/architecture/acceptance-register.md` @ commit `a6d58ce0f9d66cd3d14271ad0a0c642174220f14` | status | Project owner (De Jong Yeong) | 2026-10-03 | 2026-10-03 | Project owner instruction: "I explicitly accept the six Phase 0 acceptance items identified in the current verification report." Version per owner instruction: "Use that C1 SHA as the version identifier for the next acceptance stage." |
 | ACC-007 | `docs/phases/phase-0-product-and-secure-engineering-foundation.md` @ commit `a6d58ce0f9d66cd3d14271ad0a0c642174220f14` | content | Project owner (De Jong Yeong) | 2026-10-03 | 2026-10-03 | Project owner instruction: "I explicitly accept the six Phase 0 acceptance items identified in the current verification report." Version per owner instruction: "Use that C1 SHA as the version identifier for the next acceptance stage." Lifecycle status remains governed by the phase status model. |
 | ACC-008 | `docs/phases/phase-0-product-and-secure-engineering-foundation.md` @ commit `5d89f3cff3cb8215260bca8909ece5aa32c49744` | content | Project owner (De Jong Yeong) | 2026-10-04 | 2026-10-04 | Project owner instruction: "C3 is accepted as the implementation baseline" and "Proceed to prepare ACC-008 as a separate acceptance-stage change." Fresh content acceptance covering exactly the substantive changes since ACC-007: Task 0.20 Tests, P0-AC-021, and P0-AC-025. ACC-007 remains a historical record. Lifecycle status remains governed by the phase status model. |
+| ACC-009 | `docs/architecture/acceptance-register.md` @ commit `24d1c63587066197f0f3b6fb1add32f1f1b8cf19` | status | Project owner (De Jong Yeong) | 2026-10-04 | 2026-10-04 | Project owner instruction: "Its scope and content have been reviewed and accepted for the purpose of proceeding with fresh acceptance" and "Add the next acceptance entry, `ACC-009`, accepting commit: `24d1c63587066197f0f3b6fb1add32f1f1b8cf19`." Fresh status acceptance covering exactly the substantive change since ACC-006: the whitespace-only reformatting clarification in §2. ACC-006 remains a historical record. |
