@@ -1767,3 +1767,66 @@ In each run, every step of both jobs concluded `success`, and no `##[error]` or 
 - Because both runs passed, the duplicate is not a failed security control. No workflow or GitHub configuration was changed.
 
 This section is not part of commit C16. It is in the working tree until it is separately committed.
+
+### Post-push CI evidence (C17) — 2026-10-05
+
+**Section status:** Recorded.
+
+**Authorization:** the Project Owner's authorization of 2026-10-05 to observe the CI run triggered by the push of C17 and to record its evidence. This section continues PP.1–PP.8. It records no lifecycle transition and does not alter the Completion Decision, the Final Verification, PP.1–PP.8 or any earlier section.
+
+#### PP.9 Push
+
+- **Push:** owner-authorized `git push origin main:main`, without force options, on 2026-10-05.
+- **Ref update:** one ref, remote `main` from C16 `ff08062bb9a88285114b6916c23e3322d8f25c95` to C17 `ca57ef587918b1eca2d8bd7aaeb55138e90092b5`.
+- **Commit:** C17 (`docs(phases): record C16 CI evidence`) adds PP.5–PP.8 to this record.
+- **GitHub message during the push:** "Bypassed rule violations for refs/heads/main: Required status check "Secret scanning" is expected." This is the condition already covered by owner determination R13.7 item 3. It is not a new finding.
+- **Remote state after the push:** `git ls-remote` showed only `HEAD` and `refs/heads/main`, both at C17.
+
+#### PP.10 CI run
+
+- **Run:** `https://github.com/dejongyeong/sentinel-ai/actions/runs/37353478103`.
+- **Identification:**
+  - run number 7; workflow `Security`; path `.github/workflows/security.yml`;
+  - event `push`; branch `main`; actor and triggering actor `dejongyeong`;
+  - head SHA `ca57ef587918b1eca2d8bd7aaeb55138e90092b5`; attempt 1.
+- **Outcome:** created 2026-10-05T18:06:42Z, updated 18:06:54Z; status `completed`; conclusion `success`.
+- **Run count:** this was the only workflow run for C17. The duplicate execution observed for C16 (PP.8) did not recur.
+
+**Check runs on C17** (both from GitHub Actions app `15368`):
+
+| Check run | ID | Status | Conclusion |
+| --------- | -- | ------ | ---------- |
+| `Secret scanning` (required context) | 111909872663 | completed | success |
+| `Secret scanning positive control` | 111909872237 | completed | success |
+
+**How the evidence was read:** `[REMOTE HOST]` read-only `gh run list`, `gh run view --json`, `gh run view --log`, `gh api .../actions/runs/37353478103` and `gh api .../commits/ca57ef58…/check-runs`. The log lines below were read directly from the job logs by orchestration.
+
+#### PP.11 Job evidence
+
+Every step of both jobs concluded `success`. No `##[error]` or `##[warning]` annotation appears in the run log.
+
+**`Secret scanning` job:**
+- `Run Gitleaks` (gitleaks-action): `git log -p -U0 -1`; "1 commits scanned"; "no leaks found". This is the single pushed commit, C17.
+- `Install pinned Gitleaks for full-history scan (checksum-verified)`: `gitleaks_8.30.1_linux_x64.tar.gz: OK`.
+- `Scan full history (fail-closed)`:
+  - "17 commits scanned"; "no leaks found".
+  - `RECORD|CI-FULL-HISTORY-SCAN|PASS|CONTINUE|target=ca57ef587918b1eca2d8bd7aaeb55138e90092b5; expected=17; scanned=17; leaks=0; exit=0`.
+  - The expected count, 17, equals the local commit count of C17.
+
+**`Secret scanning positive control` job:**
+- The checksum-verified install reported `OK`.
+- `Run positive control`:
+  - `RECORD|VER-P0-GITLEAKS-NEG|PASS|CONTINUE|clean scan exit codes: before=0 after=0`
+  - `RECORD|VER-P0-GITLEAKS-POS|PASS|CONTINUE|positive scan exit=1; report=RULES:github-pat; repo occurrences=0`
+
+#### PP.12 Result against P0-AC-021
+
+| P0-AC-021 element | Evidence | Result |
+| ----------------- | -------- | ------ |
+| (1) The CI positive control detects a synthetic fixture generated at runtime outside the checkout, by rule `github-pat` | PP.11 positive-control RECORD lines | PASS |
+| (1) The fixture is removed within the job | `scripts/checks/gitleaks-controls.sh:56` and `:61`, unchanged since C1 | established by construction (as FV.9); not observed in the log |
+| (2) The repository secret scan reports no leaks | PP.11: gitleaks-action, 1 commit, no leaks; fail-closed full history `expected=17; scanned=17; leaks=0; exit=0` | PASS |
+
+**Result: PASS** for C17, run `37353478103`.
+
+This section is not part of commit C17. It is in the working tree until it is separately committed.
