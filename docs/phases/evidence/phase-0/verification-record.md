@@ -1697,3 +1697,73 @@ No `##[error]` or `##[warning]` annotation appears in the run log.
 **Result: PASS** for run `37343576101` on C15. The post-push CI dependency recorded in CD.7 and F25 is satisfied by this run for C10–C15, which includes the completion commit C15. The full-history scan covered all 15 commits.
 
 This section changes no earlier record, finding disposition or lifecycle entry. Commit C15 does not contain this section; it is part of the working tree until it is separately committed and pushed.
+
+### Post-push CI evidence (C16) — 2026-10-05
+
+**Section status:** Recorded.
+
+**Authorization:** the Project Owner's authorization of 2026-10-05 for observing the CI runs triggered by the push of C16 and recording their evidence. This section continues the post-push evidence in PP.1–PP.4. It records no lifecycle transition and does not alter the Completion Decision, the Final Verification, PP.1–PP.4 or any earlier section.
+
+#### PP.5 Push
+
+- **Push:** owner-authorized `git push origin main:main` (no force options), 2026-10-05. It made a single ref update: remote `main` moved from C15 `7cefb4da0d21bf16d573df9af832e672946bd3c6` to C16 `ff08062bb9a88285114b6916c23e3322d8f25c95`.
+- **C16 contents:** commit C16 (`docs(phases): record post-push CI evidence`) adds PP.1–PP.4 to this record.
+- **GitHub message during the push:** "Bypassed rule violations for refs/heads/main: Required status check "Secret scanning" is expected." The same message appeared for C15, and owner determination R13.7 item 3 covers it.
+- **Remote state after the push:** `git ls-remote` showed only `HEAD` and `refs/heads/main`, both at C16.
+
+#### PP.6 CI runs
+
+Two `Security` workflow runs were observed for C16. Both came from the same workflow file and were triggered by the same push event.
+
+| Run | Run number | Created (UTC) | Event / branch | Head SHA | Attempt | Conclusion |
+| --- | ---------- | ------------- | -------------- | -------- | ------- | ---------- |
+| `https://github.com/dejongyeong/sentinel-ai/actions/runs/37344965264` | 5 | 2026-10-05T16:58:53Z | `push` / `main` | `ff08062bb9a88285114b6916c23e3322d8f25c95` | 1 | `success` |
+| `https://github.com/dejongyeong/sentinel-ai/actions/runs/37344969555` | 6 | 2026-10-05T16:58:55Z | `push` / `main` | `ff08062bb9a88285114b6916c23e3322d8f25c95` | 1 | `success` |
+
+Both runs used workflow path `.github/workflows/security.yml` and were triggered by actor `dejongyeong`.
+
+**Check runs on C16** (all from GitHub Actions app `15368`):
+
+| Check run | Run 37344965264 | Run 37344969555 |
+| --------- | --------------- | --------------- |
+| `Secret scanning` (required context) | ID 111881119386: completed, success | ID 111881133474: completed, success |
+| `Secret scanning positive control` | ID 111881119066: completed, success | ID 111881133099: completed, success |
+
+**How the evidence was read:** `[REMOTE HOST]` read-only `gh run list`, `gh run view --json`, `gh run view --log`, `gh api .../actions/runs/<id>` and `gh api .../commits/ff08062…/check-runs`. Orchestration read the log lines directly from the job logs.
+
+#### PP.7 Job evidence (identical in both runs)
+
+In each run, every step of both jobs concluded `success`, and no `##[error]` or `##[warning]` annotation appears in the log.
+
+**`Secret scanning` job:**
+- **`Run Gitleaks` (gitleaks-action):** ran `git log -p -U0 -1`; "1 commits scanned"; "no leaks found". This is the single pushed commit, C16.
+- **`Install pinned Gitleaks for full-history scan (checksum-verified)`:** `gitleaks_8.30.1_linux_x64.tar.gz: OK`.
+- **`Scan full history (fail-closed)`:**
+  - "16 commits scanned"; "no leaks found".
+  - `RECORD|CI-FULL-HISTORY-SCAN|PASS|CONTINUE|target=ff08062bb9a88285114b6916c23e3322d8f25c95; expected=16; scanned=16; leaks=0; exit=0`.
+  - The expected count of 16 equals the local commit count of C16.
+
+**`Secret scanning positive control` job:**
+- The checksum-verified install reported `OK`.
+- `Run positive control`:
+  - `RECORD|VER-P0-GITLEAKS-NEG|PASS|CONTINUE|clean scan exit codes: before=0 after=0`
+  - `RECORD|VER-P0-GITLEAKS-POS|PASS|CONTINUE|positive scan exit=1; report=RULES:github-pat; repo occurrences=0`
+
+#### PP.8 Result and observed anomaly
+
+| P0-AC-021 element | Evidence (both runs) | Result |
+| ----------------- | -------------------- | ------ |
+| (1) The CI positive control detects a synthetic fixture generated at runtime outside the checkout, by rule `github-pat` | PP.7 positive-control RECORD lines | PASS |
+| (1) The fixture is removed within the job | `scripts/checks/gitleaks-controls.sh:56`, `:61`, unchanged since C1 | established by construction (as FV.9); not observed in the log |
+| (2) The repository secret scan reports no leaks | PP.7: gitleaks-action 1 commit, no leaks; fail-closed full history `expected=16; scanned=16; leaks=0` | PASS |
+
+**Result: PASS** for C16, in run `37344965264` and in run `37344969555`.
+
+**Observed anomaly: duplicate workflow execution.**
+- One push updated `main` from C15 to C16 (PP.5).
+- Two `Security` workflow runs, run numbers 5 and 6, created two seconds apart, were subsequently observed for the same C16 SHA and push event.
+- Both completed successfully with equivalent relevant results.
+- The available evidence does not establish why the workflow ran twice.
+- Because both runs passed, the duplicate is not a failed security control. No workflow or GitHub configuration was changed.
+
+This section is not part of commit C16. It is in the working tree until it is separately committed.
