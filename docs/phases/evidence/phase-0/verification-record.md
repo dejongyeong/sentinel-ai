@@ -1642,3 +1642,58 @@ Decision authority: Project Owner. No personal name or approver identity is reco
 #### CD.9 Post-completion integrity check
 
 After this decision and the separately recorded `Verification` → `Complete` transition, a new post-completion baseline is captured. The final integrity and verification check runs against that baseline, not against R15-S1, R15-PR0, R15-PR1 or FV-PR0. Its result is reported to the Project Owner.
+
+### Post-push CI evidence — 2026-10-05
+
+**Section status:** Recorded.
+
+**Authorization:** the Project Owner's authorization of 2026-10-05 for observing CI after the push and recording its evidence. This section records the post-push CI dependency named in CD.7 and F25. It records no lifecycle transition and does not alter the Completion Decision, the Final Verification or any earlier section.
+
+#### PP.1 Push
+
+- **Push:** owner-authorized `git push origin main:main` (no force options), 2026-10-05.
+- **Result:** remote `main` moved from C10 `2d9bf722cd38b9032425a960c3feac55a294bbf7` to C15 `7cefb4da0d21bf16d573df9af832e672946bd3c6`, which made C11–C15 public.
+- **GitHub message during the push:** "Bypassed rule violations for refs/heads/main: Required status check "Secret scanning" is expected." The push was a direct administrator push. Layer 4 governs merges into protected branches, and administrator bypass on a direct push is not a contradiction (owner determination R13.7 item 3). The required check then ran on C15 (PP.2).
+
+#### PP.2 CI run
+
+- **Run:** `https://github.com/dejongyeong/sentinel-ai/actions/runs/37343576101`.
+  - Workflow `Security`; event `push`; branch `main`; head SHA `7cefb4da0d21bf16d573df9af832e672946bd3c6`; attempt 1.
+  - Created 2026-10-05T16:47:55Z, updated 16:48:06Z; status `completed`, conclusion `success`.
+- **Check runs on C15** (both from GitHub Actions app `15368`):
+
+| Check run | ID | Status | Conclusion |
+| --------- | -- | ------ | ---------- |
+| `Secret scanning` (required context) | 111876447162 | completed | success |
+| `Secret scanning positive control` | 111876446969 | completed | success |
+
+- **How the evidence was read:** `[REMOTE HOST]` read-only `gh run list`, `gh run view --json`, `gh run view --log` and `gh api .../commits/7cefb4da…/check-runs`, using the existing read-only `gh` authentication. The log lines below were read by orchestration directly from the job logs; the owner did not transcribe them.
+
+#### PP.3 Job evidence
+
+**`Secret scanning` job** (every step `success`):
+- **`Run Gitleaks` (gitleaks-action):**
+  - It ran `git log -p -U0 --no-merges --first-parent 16f5aba717acef82fa70cee36ac1c7f93ee0dca0^..7cefb4da0d21bf16d573df9af832e672946bd3c6`, which is the five pushed commits C11–C15.
+  - It reported "5 commits scanned" and "no leaks found".
+- **`Install pinned Gitleaks for full-history scan (checksum-verified)`:** `gitleaks_8.30.1_linux_x64.tar.gz: OK`.
+- **`Scan full history (fail-closed)`:** reported "15 commits scanned" and "no leaks found", then `RECORD|CI-FULL-HISTORY-SCAN|PASS|CONTINUE|target=7cefb4da0d21bf16d573df9af832e672946bd3c6; expected=15; scanned=15; leaks=0; exit=0`. The expected count, 15, equals the local commit count of C15.
+
+**`Secret scanning positive control` job** (every step `success`):
+- `Install pinned Gitleaks (checksum-verified)`: checksum OK; `GITLEAKS_VERSION` 8.30.1.
+- `Run positive control` (`bash scripts/checks/gitleaks-controls.sh`), with a temporary directory outside the checkout:
+  - `RECORD|VER-P0-GITLEAKS-NEG|PASS|CONTINUE|clean scan exit codes: before=0 after=0`
+  - `RECORD|VER-P0-GITLEAKS-POS|PASS|CONTINUE|positive scan exit=1; report=RULES:github-pat; repo occurrences=0`
+
+No `##[error]` or `##[warning]` annotation appears in the run log.
+
+#### PP.4 Result against P0-AC-021
+
+| P0-AC-021 element | Evidence | Result |
+| ----------------- | -------- | ------ |
+| (1) The CI positive control detects a synthetic fixture generated at runtime in an isolated temporary workspace outside the checkout, by rule `github-pat` | PP.3 positive-control RECORD lines | PASS |
+| (1) The fixture is removed within the job | `scripts/checks/gitleaks-controls.sh:56`, `:61` (`mktemp -d`; `trap 'rm -rf "$TMP"' EXIT`), unchanged since C1 | established by construction (as FV.9); not observed in the log |
+| (2) The repository secret scan reports no leaks | PP.3: gitleaks-action 5 commits, no leaks; fail-closed full history `expected=15; scanned=15; leaks=0` | PASS |
+
+**Result: PASS** for run `37343576101` on C15. The post-push CI dependency recorded in CD.7 and F25 is satisfied by this run for C10–C15, which includes the completion commit C15. The full-history scan covered all 15 commits.
+
+This section changes no earlier record, finding disposition or lifecycle entry. Commit C15 does not contain this section; it is part of the working tree until it is separately committed and pushed.
