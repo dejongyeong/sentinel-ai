@@ -3,20 +3,19 @@
 **File:** `docs/decisions/decision-register.md`  
 **Status:** Proposed  
 **Owner:** Engineering  
-**Authority:** Record of phase-level tooling selections, deferred decisions, architectural dependencies, and deferred governance improvements that are not ADRs (see `docs/decisions/README.md`)
+**Authority:** Record of phase-level tooling selections, phase-level owner decisions and deferrals, deferred architectural decisions, architectural dependencies, and deferred governance improvements that are not ADRs. Designated by `docs/architecture/documentation-authority.md` §4 ("Non-ADR decision and deferral record") and `docs/decisions/README.md` §3a.
 
 ## 1. Purpose
 
-This register records:
+This register records phase-level tooling selections and owner decisions and deferrals that are within the authority of the accepted product, architecture and governance model, together with deferred architectural decisions, open architectural dependencies, and deferred governance improvements.
 
-- phase-level selections that the canonical specification assigns to a phase but that are not consequential architectural decisions requiring an ADR;
-- deferred architectural decisions and the phase in which each is expected to be decided;
-- open architectural dependencies that requirements or later phases depend on;
-- known governance limitations deferred to a later intentional revision.
+Its authority as the record for these subjects comes from the accepted governance and documentation model: `docs/architecture/documentation-authority.md` §4 and `docs/decisions/README.md` §3a. It is a recording mechanism. It records decisions made by the Project Owner; it does not create them, and it does not create, override or supersede architectural decisions, accepted requirements, or the current Accepted canonical specification. It does not replace ADRs.
 
-It does not record human acceptance; acceptance is recorded only in `docs/architecture/acceptance-register.md`.
+A consequential architectural decision is recorded only by an ADR, not here.
 
-A consequential architectural decision is recorded by an ADR, not here.
+It does not record human acceptance; acceptance of documents is recorded only in `docs/architecture/acceptance-register.md`.
+
+Individual entries carry no independent architectural authority. Where an entry records an owner-confirmed enforcement disposition (for example a Phase 1 import rule), the entry cites the accepted source authority from which the rule derives.
 
 ## 2. Phase 0 Selections
 
