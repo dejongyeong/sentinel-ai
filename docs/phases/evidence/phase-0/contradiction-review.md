@@ -151,6 +151,8 @@ No governance contradiction remains among the governing documents at C7.
 
 ### Run 6 — 2026-10-04 (verification at C9)
 
+**Section status:** Superseded by Run 13 (final verification at C14).
+
 - **Reviewer:** main Claude Code session (not independent)
 - **Baseline:** C9 `1b90511756e66620c00c87e14943324529d2922f`, clean working tree (`working_tree_content_hash` `e56e7da2db09c1e179a695b3a4e555e12a7347bded1d79ba7635ffe15efe02e6`)
 - **Method:**
@@ -179,3 +181,75 @@ No governance contradiction remains among the governing documents at C7.
 | CR-7 | Low | Tasks say content is assessed by both review layers although Layer 2 is permissibly BLOCKED | wording overstatement, unchanged | Future governed revision (L1-R3-7) |
 
 No governance contradiction remains among the governing documents at C9.
+
+### Run 13 — 2026-10-04 (final verification at C14)
+
+- **Reviewer:** main Claude Code session (not independent)
+- **Baseline:** C14 `d2570ad8f14b0863b3643fca36c8f107a2bdb406`, plus the uncommitted evidence notes R6.9, R6.10 and §3.20 (`working_tree_content_hash` `db235af7c8504e1330da607e251a16074023778892365827e1f85b41149a3616`)
+- **Method:** a fresh `[REAL REPO]` read-only sweep at 2026-10-04T17:18:22Z, covering every governing file changed since C9. The files changed since C9 are:
+  - `acceptance-register.md`;
+  - `documentation-authority.md`;
+  - `security-architecture.md`;
+  - the Phase 0 document;
+  - the four evidence records.
+
+| Sweep | Command (abridged) | Result |
+| ----- | ------------------ | ------ |
+| S1 status values | `git grep -hE '^\*\*Status:\*\*' -- docs CLAUDE.md ':!docs/phases/evidence'` | 7 `Accepted` (six documents plus v0.3's internal line), 2 `Historical`, 16 `Proposed`; no undefined values |
+| S2 old ADR path | `git grep -n 'docs/decisions/ADR-'` | 0 |
+| S3 version references | ``git grep -nE 'canonical-specification-v[0-9]\|\bv0\.[0-9]\b'`` outside `canonical-specification/`, the register and the evidence records | Only version-specific references remain: decision register DGI-001 (lines 73, 75); Phase 0 Task 0.7 inputs (lines 327, 332, 333); the historical v0.1/v0.2 note (line 1190). `documentation-authority.md` has 0 prose version identifiers. |
+| S4 incident procedure | headings matching incident/secret-exposure response | only `docs/security/secret-incident-response.md` |
+| S5 Accepted claims | `**Status:** Accepted` vs register | six documents, each backed by ACC entries whose version relationship holds (`verification-record.md` R13.2) |
+| S6 stale remote statements | `git grep -niE 'no remote\|not configured\|has no remote'` outside the evidence records | Phase 0 document line 1195 only (L1-R13-1); the security-architecture §6 Layer 4 line now reads "configured on main …" |
+| S7 phase-status statements in evidence | R6.10 patterns A and B | The twelve corrected statements (R6.9, R6.10), the excluded Run 1 §3.7 and eligibility lines, and self-references inside the correction notes (`verification-record.md` lines 787 and 803 in R6.10; `engineering-review.md` line 311 in §3.20). No other hits. |
+| S9 phase document | `## Status` value vs latest Status History row | consistent (`VER-P0-LIFECYCLE-001` PASS) |
+
+| ID | Severity | Issue | Classification | Remediation |
+| -- | -------- | ----- | -------------- | ----------- |
+| CR-1 | Low | `CLAUDE.md:68` Next.js summary omits "internal domain persistence" | confirmed, unchanged | Not authorized in this stage |
+| CR-2 | Low | Phase-transition BLOCKED set defined in a script constant | confirmed, unchanged | Not authorized in this stage |
+| CR-3 | Info | Roadmap and lifecycle duplicated in the canonical specification (DGI-001) | duplicate (recorded) | Deferred by owner decision |
+| CR-4 | — | CI detection criterion vs never-commit rule | resolved in C3 (ACC-008) | — |
+| CR-5 | — | Repository-protection check depends on the `gh` CLI | **resolved**: `gh` available and authenticated; check PASS (`verification-record.md` R13.4) | — |
+| CR-6 | — | "Substantive content change" undefined for whitespace-only reformatting | resolved in C5 (ACC-009) | — |
+| CR-7 | Low | Tasks say content is assessed by both review layers | wording overstatement, unchanged | Future governed revision (L1-R3-7) |
+| CR-8 | Low | Phase 0 Known Limitations (line 1195) states no remote, contradicting the recorded CI and protection evidence | stale statement in an accepted document | Owner: leave unchanged; Final Verification records resolution (L1-R13-1) |
+| CR-9 | — | Evidence records stated the phase lifecycle status, contrary to P0-AC-005 | **resolved by recorded correction**: `verification-record.md` R6.9 and R6.10; `engineering-review.md` §3.20 | — |
+
+No unresolved governance contradiction remains among the governing documents at C14. CR-8 is disposed of by owner determination.
+
+### Run 15 — 2026-10-05 (verification at C14)
+
+**Section status:** Recorded.
+
+**Earlier sections (R15-L2-DOC-1).** The Run 13 section of this record is superseded by this Run 15 section as the current contradiction review. Its content is preserved as recorded.
+
+- **Reviewer:** main Claude Code session (not independent).
+- **Baseline:** R15-S1 (2026-10-05T11:26:41Z): C14 `d2570ad8f14b0863b3643fca36c8f107a2bdb406` plus the uncommitted evidence through `verification-record.md` R14.12 and the Phase 0 document's lifecycle record; `working_tree_content_hash` `4b67ddd020aac77690066e0e8d9f5f441a346019b5c534ad7da80869bb1da708`.
+- **Method:** a fresh `[REAL REPO]` read-only sweep at 2026-10-05T11:29:11Z, using `grep -r` over the working tree. Unlike the Run 13 sweep, which used `git grep` outside the evidence records, S2 here also searched the evidence records. Each hit was classified by reading the line.
+
+| Sweep | Command (abridged) | Result |
+| ----- | ------------------ | ------ |
+| S1 status values | `grep -rhE '^\*\*Status:\*\*' docs CLAUDE.md --exclude-dir=evidence` | 7 `Accepted`, 2 `Historical`, 16 `Proposed`; no undefined values. The Phase 0 document's `## Status` value is a phase-model value and matches its latest Status History row (`VER-P0-LIFECYCLE-001` PASS) |
+| S2 old ADR path | `grep -rn 'docs/decisions/ADR-'` over the repository | 4 hits, all in this record's own method text (lines 45, 72, 99, 199); 0 elsewhere |
+| S3 version references | `grep -rnE 'canonical-specification-v[0-9]\|\bv0\.[0-9]\b'` outside `canonical-specification/`, the register and the evidence records | Only the version-specific references: decision register DGI-001 (lines 73, 75); Phase 0 Task 0.7 inputs (lines 327, 332, 333); the historical v0.1/v0.2 note (line 1190) |
+| S4 incident procedure | headings matching incident/secret-exposure response | only `docs/security/secret-incident-response.md` |
+| S5 Accepted claims | files with `**Status:** Accepted` | six documents, each backed by an ACC entry whose version relationship holds (`verification-record.md` R15.2) |
+| S6 stale remote statements | `grep -rniE 'no remote\|not configured\|has no remote'` outside the evidence records | Phase 0 document line 1195 only (CR-8, L1-R13-1) |
+| S7 phase-status statements in evidence | R6.10 patterns A and B over the four evidence records | Every hit classified: the twelve corrected statements (R6.9, R6.10, §3.20); Run 1 §3.7 (excluded by owner determination); transition-eligibility and transition descriptions (for example `verification-record.md` 273, 386, 524, 711, 927); governing-basis quotations and cross-references in R14.9 and R14.12 (1118–1161); quotations inside correction notes (`engineering-review.md` 313, 407); and verbatim reviewer text in `independent-review.md`, classified under `verification-record.md` R13.10 item 2. One stale present-tense statement about the Status History (`verification-record.md` line 1120) is corrected by R15.10 (R15-L2-DOC-2). No other hits |
+| S8 lifecycle transitions | Phase 0 Status History vs `docs/phases/README.md` §11a (lines 266–268) | every row is a permitted transition |
+| S9 lifecycle placeholders | `To be completed` in the Phase 0 document | Final Verification (line 1239) and Completion Decision (line 1243) placeholders, expected before completion |
+
+| ID | Severity | File | Issue | Authority | Evidence | Classification | Remediation |
+| -- | -------- | ---- | ----- | --------- | -------- | -------------- | ----------- |
+| CR-1 | Low | `CLAUDE.md` | Next.js summary omits "internal domain persistence" | canonical v0.3 §6 | `CLAUDE.md:68` | confirmed, unchanged | Not authorized in this stage |
+| CR-2 | Low | `scripts/verify-phase.sh` | Phase-transition BLOCKED set defined in a script constant | Phase 0 document, Exit Criteria | Phase 0 document line 1129 | confirmed, unchanged | Not authorized in this stage |
+| CR-3 | Info | canonical specification | Roadmap and lifecycle duplicated (DGI-001) | decision register DGI-001 | `decision-register.md:73-75` | duplicate (recorded) | Deferred by owner decision |
+| CR-4 | — | — | CI detection criterion vs never-commit rule | — | — | resolved in C3 (ACC-008) | — |
+| CR-5 | — | — | Repository-protection check depends on `gh` | — | `verification-record.md` R13.4, R15.3 | resolved | — |
+| CR-6 | — | — | "Substantive content change" undefined for whitespace-only reformatting | — | — | resolved in C5 (ACC-009) | — |
+| CR-7 | Low | Phase 0 document | Tasks say content is assessed by both review layers | Phase 0 document | task wording (L1-R3-7) | wording overstatement, unchanged | Future governed revision |
+| CR-8 | Low | Phase 0 document | Known Limitations (line 1195) states no remote, contradicting recorded CI and protection evidence | Phase 0 document; `verification-record.md` R6.3, R15.3 | Phase 0 document line 1195 | stale statement in an accepted document | Owner: leave unchanged; the Final Verification records resolution (L1-R13-1) |
+| CR-9 | — | evidence records | Evidence records stated the phase lifecycle status (P0-AC-005) | P0-AC-005 | `verification-record.md` R6.9, R6.10; `engineering-review.md` §3.20; R13.10 item 2 | resolved by recorded correction and classification; S7 re-run above finds no other statement | — |
+
+No unresolved governance contradiction remains among the governing documents in the Run 15 baseline. CR-8 is disposed of by owner determination.

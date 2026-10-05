@@ -248,6 +248,8 @@ Run 3 rows and the §3.13 dispositions are historical and unchanged. This table 
 
 ### Run 6 — 2026-10-04 (verification at C9)
 
+**Section status:** Superseded by Run 13 (final verification at C14).
+
 - **Reviewer:** main Claude Code session (implementer; not independent)
 - **Baseline:**
   - C9 `1b90511756e66620c00c87e14943324529d2922f` (C8 `85697965…`, C7 `b71fd858…`, C1 `a6d58ce0…`)
@@ -305,3 +307,139 @@ Severity rationale: at discovery, the defect made a completion gate (P0-AC-021 /
 - Info applying: 4 (L1-R2-6, L1-R3-5, L1-R3-6, L1-R4-3).
 - Resolved since Run 4: L1-R4-1, and L1-R6-1, which was found and resolved within this cycle.
 - No finding requires a consequential architectural decision. No governance contradiction remains.
+
+#### 3.20 Correction note: phase-status statement (P0-AC-005) (recorded 2026-10-04, after Run 6)
+
+**Correction.** Line 116 (the L1-R2-4 row in Run 2 §3.8) states that the phase is in a named lifecycle status. It should not have been written as a phase-status declaration: P0-AC-005, `docs/phases/README.md` §25a and `docs/architecture/documentation-authority.md` §22 require that an evidence record never states or implies the phase lifecycle status.
+
+**Authoritative source.** The Phase 0 document's `## Status` field and Status History are the only authoritative sources of that status.
+
+**Historical text.** The statement remains unchanged, as recorded. This note corrects its effect prospectively; it does not rewrite it.
+
+**Context.** This statement is one of the four additional statements identified by the broader sweep recorded in `verification-record.md` R6.10, which supplements R6.9.
+
+### Run 13 — 2026-10-04 (final verification at C14)
+
+- **Reviewer:** main Claude Code session (implementer; not independent)
+- **Baseline:**
+  - C14 `d2570ad8f14b0863b3643fca36c8f107a2bdb406`, plus the uncommitted evidence notes R6.9, R6.10 and §3.20;
+  - R13-S1 `working_tree_content_hash` `db235af7c8504e1330da607e251a16074023778892365827e1f85b41149a3616`;
+  - `commit_count` 14; remote `origin`.
+- **Inputs:**
+  - the deterministic suite at 2026-10-04T17:17:14Z (`verification-record.md` R13.1);
+  - the acceptance/version check (R13.2);
+  - the repository-protection evidence (R13.4);
+  - the contradiction review (`contradiction-review.md` Run 13);
+  - the Layer 2 reviews recorded in `independent-review.md` (Runs 7–13).
+- **Timestamp (UTC):** 2026-10-04T17:20Z
+- Runs 7–12 are recorded as notes only (`verification-record.md` "Runs 7–12"). This table carries forward from Run 6 §3.17–§3.19.
+
+#### 3.21 Status of earlier findings
+
+| ID | Run 13 status | Evidence |
+| -- | ------------- | -------- |
+| L1-SE-1 (Medium) | Open; required before completion: No. Owner: no new disposition. | `scripts/` unchanged since C1 |
+| L1-SE-2 (Low) | Open | unchanged |
+| L1-SE-3 (Low) | Open (known) | unchanged |
+| L1-AR-1 (Low) | Open | `CLAUDE.md` unchanged |
+| L1-AR-2 (Low) | Open | unchanged |
+| L1-SEC-1 (Medium) | **Resolved** | `VER-P0-CI-EXEC` PASS (R6.3, R13.3) and `VER-P0-REPO-PROTECTION` PASS (R13.4) |
+| L1-SEC-2 (Medium) | Closed (owner disposition, §3.13) | unchanged |
+| L1-SEC-3 (Low) | Open | `.claude/settings.json` unchanged |
+| L1-AI-1 (Low) | Open (DEP-001) | unchanged |
+| L1-AI-2 (Low) | Open | `docs/ai/` absent |
+| L1-R2-2 (Medium) | **Resolved** | `gh` is available and authenticated with least privilege, and `VER-P0-REPO-PROTECTION` was evaluated and PASSED (R13.4). CR-5 is resolved likewise. |
+| L1-R2-4 (Low) | Open: the Final Verification and Completion Record are not yet written | Phase 0 document, Completion Record |
+| L1-R2-5 (Low) | Open (owner: no change now) | line-ending state |
+| L1-R2-6 (Info) | Applies | ACC-009 and ACC-010 were required by this rule |
+| L1-R3-1 (Medium) | Open; Deferred (owner). Owner: no new disposition. | Compensating orchestration version check performed (R13.2) |
+| L1-R3-2 (Low) | Open; Deferred (owner) | unchanged |
+| L1-R3-5 (Info) | Applies; satisfied for run `37204397037` | R6.3 |
+| L1-R3-6 (Info) | Applies | unchanged |
+| L1-R3-7 (Low) | Open | Phase 0 document task wording unchanged |
+| L1-R4-1 (Info) | Resolved (Run 6) | — |
+| L1-R4-2 (Low) | Open | Historical Run 3 text; see also the R6.9/R6.10 corrections |
+| L1-R4-3 (Info) | Applies | Run 13 evidence is likewise recorded after the read-only run |
+| L1-R6-1 (Medium) | Resolved (Run 6) | — |
+
+#### 3.22 New findings
+
+| ID | Severity | Finding | Evidence | Recommendation | Required before completion |
+| -- | -------- | ------- | -------- | -------------- | -------------------------- |
+| L1-R13-1 | Low | The accepted Phase 0 document's Known Limitations still state that the repository has no remote and that CI and repository protection cannot be verified. This is no longer accurate (R6.3, R13.4). | Phase 0 document line 1195 | Owner decision recorded: leave the accepted text unchanged now; the Final Verification records that the limitation is resolved. Changing the text would need fresh content acceptance (acceptance-register §2). | No (Phase 0 "Transition to Complete" conditions) |
+| L1-R13-2 | Low | `VER-P0-STATUS-RECORD-001` does not detect the phase-status wording identified in R6.9 and R6.10, so its PASS does not establish P0-AC-005 compliance on its own. | `scripts/verify-phase.sh` (`check_status_record` pattern); `verification-record.md` R6.9, R6.10 | A tooling improvement is a separate governed decision; the owner has authorized no verifier change. | No (corrected by recorded notes; owner determination 6) |
+| L1-R13-3 | Low | `VER-P0-CI-CONFIG` does not assert the C9 fail-closed full-history step or the second Gitleaks install, so it is not a regression guard for the L1-R6-1 remediation. This duplicates R8-L2-SEC-2. | `scripts/verify-phase.sh` (`check_ci_config`); `.github/workflows/security.yml` | Consider it in a later governed tooling change. | No (P0-AC-020 met as written) |
+
+#### 3.23 Owner dispositions recorded in this run
+
+The owner determinations of 2026-10-04 are recorded in full in `verification-record.md` R13.7, items 1–10. This record does not restate them.
+
+#### 3.24 Summary
+
+- High: 0.
+- Medium open: 2 (L1-SE-1; L1-R3-1, which is Deferred).
+- Low open: 15 (L1-SE-2, L1-SE-3, L1-AR-1, L1-AR-2, L1-SEC-3, L1-AI-1, L1-AI-2, L1-R2-4, L1-R2-5, L1-R3-2 (Deferred), L1-R3-7, L1-R4-2, L1-R13-1, L1-R13-2, L1-R13-3).
+- Info applying: 4 (L1-R2-6, L1-R3-5, L1-R3-6, L1-R4-3).
+- Resolved since Run 6: L1-SEC-1 and L1-R2-2.
+- No finding requires a consequential architectural decision. No governance contradiction remains unresolved apart from L1-R13-1, which the owner has disposed of.
+
+#### 3.25 Recording correction: per-perspective statements and line-level evidence (R13r-L2-VER-5)
+
+**Basis.** Owner authorization of 2026-10-04 on R13r-L2-VER-5 (`verification-record.md` R13.10 item 3). §3.21–§3.24 are preserved as recorded. This section supplies the required fields (§2) that they lacked. P0-AC-024 is not reinterpreted.
+
+- **Reviewer:** main Claude Code session (implementer; not independent).
+- **Assessment timestamp (UTC):** 2026-10-04T17:20Z (the Run 13 Layer 1 review). This section was recorded at 2026-10-04T22:00Z.
+- **Baseline:** as in Run 13 above (C14 `d2570ad8f14b0863b3643fca36c8f107a2bdb406` plus the evidence notes; R13-S1).
+- **Change scope used by every perspective:** `git diff --name-only a6d58ce0f9d66cd3d14271ad0a0c642174220f14 d2570ad8f14b0863b3643fca36c8f107a2bdb406` (C1→C14). Outside the evidence records it lists only `.github/workflows/security.yml`, `docs/architecture/acceptance-register.md`, `docs/architecture/canonical-specification/README.md`, `docs/architecture/documentation-authority.md`, `docs/architecture/security-architecture.md`, `docs/decisions/README.md`, `docs/phases/README.md` and the Phase 0 document.
+
+| Perspective | Statement | Evidence | Findings (severity; required before completion) |
+| ----------- | --------- | -------- | ----------------------------------------------- |
+| 1. Software engineering | The verification tooling and Claude Code configuration are unchanged since C1, and the deterministic suite passes on the recorded state. No lint, format, test or type-check toolchain exists until Phase 1. | `scripts/` and `.claude/` (settings, hooks, agents, skills, rules): 0 paths changed C1→C14; `verification-record.md` R13.1 and R13.12 (PASS=21, FAIL=0, BLOCKED=0, N/A=2; `VER-P0-FORMAT-001` NOT APPLICABLE) | L1-SE-1 (Medium; No), L1-SE-2 (Low; No), L1-SE-3 (Low; No) carried forward; new L1-R13-2 (Low; No), L1-R13-3 (Low; No) |
+| 2. Architecture | No architecture subject document changed in substance except `documentation-authority.md` §5 and §22 (C12, accepted as ACC-010) and the `security-architecture.md` §6 Layer 4 status line (line 66, C14). The canonical specification v0.3 is byte-identical to C1. There are no ADR files, and the Phase 0 ADR-gate candidates are classified by the owner. | `context.md`, `system-architecture.md`, `application-architecture.md`, `data-architecture.md`, `ai-architecture.md`: 0 changes C1→C14; `verification-record.md` R13.2 (ACC-001 blob, ACC-010); `docs/architecture/security-architecture.md:66`; R13.7 item 7 | L1-AR-1 (Low; No), L1-AR-2 (Low; No) carried forward; no new finding |
+| 3. Security | Secret scanning runs in CI with the C9 fail-closed full-history scan, `main` requires the `Secret scanning` check, and the working tree scans clean. The Gitleaks configuration, pre-commit configuration, settings and hooks are unchanged since C1. | `.github/workflows/security.yml:70-136` (C9 full-history scan; changed only in C3 and C9); `verification-record.md` R6.3 and R13.3 (run `37204397037`: `expected=9; scanned=9; leaks=0`), R13.4 (REPO-PROTECTION PASS); `.gitleaks.toml`, `.pre-commit-config.yaml`, `.claude/settings.json`, `.claude/hooks/`: 0 changes C1→C14; `gitleaks dir . --redact` exit 0 (R13.12) | L1-SEC-1 and L1-R2-2 Resolved (§3.21); L1-SEC-2 Closed; L1-SEC-3 (Low; No) carried forward; new L1-R13-3 (Low; No) |
+| 4. AI engineering | Phase 0 contains no application code and no AI integration. The AI-related authority documents are unchanged since C1, so the AI boundaries recorded in earlier runs stand. | `docs/architecture/ai-architecture.md`, `docs/product/` (requirements, user stories, acceptance criteria), `docs/decisions/decision-register.md` (DEP-001): 0 changes C1→C14; `docs/ai/` absent | L1-AI-1 (Low; No), L1-AI-2 (Low; No) carried forward; no new finding |
+| 5. Documentation / governance | Governing-document changes since C9 were swept for contradictions, the acceptance/version relationship holds for ACC-001 to ACC-010, and the P0-AC-005 statements are corrected by recorded notes. One stale statement remains in the accepted Phase 0 Known Limitations, disposed of by the owner. | `contradiction-review.md` Run 13 (S1–S9, CR-1 to CR-9); `verification-record.md` R13.2, R6.9, R6.10, R13.13; Phase 0 document line 1195 ("The repository has no remote; …") | L1-R2-4, L1-R2-5, L1-R3-2, L1-R3-7, L1-R4-2 (Low; No) carried forward; new L1-R13-1 (Low; No), L1-R13-2 (Low; No) |
+
+**Corrected evidence references for §3.22:**
+
+| ID | Evidence as recorded in §3.22 | Corrected file-and-line evidence |
+| -- | ----------------------------- | -------------------------------- |
+| L1-R13-2 | `scripts/verify-phase.sh` (`check_status_record` pattern) | `scripts/verify-phase.sh:308-321` (`check_status_record`); the phase-claim pattern is at line 311 and matches only a `**Status:**`/`**Phase status:**` field or `phase [lifecycle] status:`/`=` followed by a status value. It does not match the wording of the twelve statements identified in `verification-record.md` R6.9 and R6.10 (for example line 710, "Phase 0 is in `Verification`."). |
+| L1-R13-3 | `scripts/verify-phase.sh` (`check_ci_config`); `.github/workflows/security.yml` | `scripts/verify-phase.sh:578-619` (`check_ci_config`); its assertions (lines 591-618) cover triggers, permissions, action SHA pins, checkout `fetch-depth`, and `GITLEAKS_VERSION` against the pre-commit `rev`, and none refers to the full-history steps. `.github/workflows/security.yml:70-136` is the C9 fail-closed full-history scan ("Install pinned Gitleaks for full-history scan (checksum-verified)" at line 75; "Scan full history (fail-closed)" at line 92). |
+
+The §3.24 summary counts are unchanged.
+
+### Run 15 — 2026-10-05 (verification at C14)
+
+**Section status:** Recorded.
+
+**Earlier sections (R15-L2-DOC-1).** The Run 13 Layer 1 record (including §3.25) is superseded by this Run 15 record as the current Layer 1 review. Its content is preserved as recorded. Run 14 performed no Layer 1 review (`verification-record.md` R14.4).
+
+- **Reviewer:** main Claude Code session (implementer; not independent).
+- **Assessment timestamp (UTC):** 2026-10-05T11:31Z.
+- **Baseline:** R15-S1 (2026-10-05T11:26:41Z): C14 `d2570ad8f14b0863b3643fca36c8f107a2bdb406` plus the uncommitted evidence through R14.12 and the Phase 0 document's lifecycle record (`## Status` field and one appended Status History row); 56 files; `working_tree_content_hash` `4b67ddd020aac77690066e0e8d9f5f441a346019b5c534ad7da80869bb1da708`; 14 commits; remote `origin`.
+- **Inputs:** the Run 15 deterministic suite (`verification-record.md` Run 15); the orchestration version check; the Run 15 contradiction review (`contradiction-review.md` Run 15); the Run 14 Layer 2 reports (`independent-review.md` Run 14), as context.
+- **Change scope since C1 (all perspectives):** `git diff --name-only a6d58ce0f9d66cd3d14271ad0a0c642174220f14` against the working tree lists, outside the evidence records, only `.github/workflows/security.yml`, `docs/architecture/acceptance-register.md`, `docs/architecture/canonical-specification/README.md`, `docs/architecture/documentation-authority.md`, `docs/architecture/security-architecture.md`, `docs/decisions/README.md`, `docs/phases/README.md` and the Phase 0 document. Since R13-S1, the only non-evidence change is the Phase 0 document's lifecycle record.
+
+#### 3.26 Review by perspective
+
+| Perspective | Statement | Evidence | Findings (severity; required before completion) |
+| ----------- | --------- | -------- | ----------------------------------------------- |
+| 1. Software engineering | The verification tooling and Claude Code configuration are unchanged since C1; the deterministic suite passes on the Run 15 baseline. No lint, format, test or type-check toolchain exists until Phase 1. | `scripts/`, `.claude/`: 0 paths changed C1→working tree; Run 15 suite PASS=21, FAIL=0, BLOCKED=0, N/A=2 | L1-SE-1 (Medium; No), L1-SE-2, L1-SE-3, L1-R13-2, L1-R13-3 (Low; No) carried forward; new L1-R15-1 (Info; No) |
+| 2. Architecture | No architecture subject document has changed since Run 13; canonical v0.3 is byte-identical to C1; no ADR files exist; the owner's ADR-gate classification stands. | Non-evidence manifest R15-S1 vs R13-S1: only the Phase 0 document differs; `verification-record.md` R13.2, R13.7 item 7 | L1-AR-1, L1-AR-2 (Low; No) carried forward; no new finding |
+| 3. Security | Security controls are unchanged since C9; repository protection requires `Secret scanning` (app 15368); the working tree scans clean. | `.github/workflows/security.yml:70-136`; `gh api 'repos/{owner}/{repo}/branches/main/protection/required_status_checks'` at Run 15 (`contexts ["Secret scanning"]`, `checks app_id 15368`, `strict false`; `gh` logged in as `dejongyeong`, keyring); Run 15 `VER-P0-GITLEAKS-*`, `VER-P0-REPO-PROTECTION` PASS | L1-SEC-3 (Low; No) carried forward; no new finding |
+| 4. AI engineering | Phase 0 has no application code and no AI integration; AI authority documents are unchanged since C1. Open Layer 2 AI findings have no owner disposition yet; the owner has assigned their disposition to the Completion Decision. | `docs/architecture/ai-architecture.md`, `docs/product/`, `docs/decisions/decision-register.md`: 0 changes C1→working tree; `verification-record.md` R14.7 item 1 | L1-AI-1, L1-AI-2 (Low; No) carried forward; L1-R15-2 (Info; No) |
+| 5. Documentation / governance | The Phase 0 lifecycle record now contains the Run 7 failure transition, consistent with the README §11a permitted transitions; the contradiction sweep finds no new contradiction. | Phase 0 document lines 7, 1233; `docs/phases/README.md:266-268`; `contradiction-review.md` Run 15 | L1-R2-4, L1-R2-5, L1-R3-2, L1-R3-7, L1-R4-2, L1-R13-1 (Low; No) carried forward; L1-R15-1 (Info; No) |
+
+#### 3.27 New findings
+
+| ID | Severity | Finding | Evidence | Recommendation | Required before completion |
+| -- | -------- | -------- | -------- | -------------- | -------------------------- |
+| L1-R15-1 | Info | Recording a lifecycle transition (an `In Progress` → `Verification` row after a passing run, and later the completion sections) edits the Phase 0 document after that run's baseline. `VER-P0-GIT-SAFETY-001`'s evidence-file exception does not cover it, so a recording-phase re-verification against the same baseline fails, as in R14.12. This duplicates R10-L2-VER-12's observation on completion edits. | `scripts/verify-phase.sh:659-686` (`check_git_safety`); `verification-record.md` R14.12; `independent-review.md` Run 10 `verification-reviewer` report (R10-L2-VER-12) | Plan the recording sequence in advance (for example, record the lifecycle row, then capture a new baseline for any confirming run), as the owner did for Run 15. No verifier change is proposed. | No (process sequencing; no Transition to Complete condition) |
+| L1-R15-2 | Info | The open Layer 2 AI findings (R9, R10, R13, R14) have no owner disposition; the evidence assigns it to the Completion Decision. | `verification-record.md` R14.7 item 1; `independent-review.md` Run 14 `ai-engineering-reviewer` report | Record the dispositions in the Completion Decision, as determined. | No (owner determination R14.7 item 1) |
+
+#### 3.28 Summary
+
+- High: 0. Medium open: 2 (L1-SE-1; L1-R3-1, Deferred). Low open: 15 (unchanged from §3.24). Info applying: 6 (L1-R2-6, L1-R3-5, L1-R3-6, L1-R4-3, L1-R15-1, L1-R15-2).
+- No finding requires a consequential architectural decision.
+- `VER-P0-REVIEW-L1`: performed and recorded with the required fields (not independent).

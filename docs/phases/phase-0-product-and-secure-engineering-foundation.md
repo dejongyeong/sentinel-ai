@@ -4,7 +4,7 @@
 
 ## Status
 
-`Verification`
+`Complete`
 
 ## Objective
 
@@ -1230,20 +1230,40 @@ No commit may occur in the real repository during a verification run (`docs/phas
 | 2026-10-03 | In Progress     | Verification | Transition rule satisfied by verification run 1 and re-verification (no FAIL; only permitted BLOCKED; no STOP); completion gates CI-EXEC, REPO-PROTECTION and ACCEPT-001 remain BLOCKED | `docs/phases/evidence/phase-0/verification-record.md` Run 1, §3.6–§3.7 |
 | 2026-10-04 | Verification    | In Progress | Required verification failed: CI run 37173065284 on C8 `856979659db02757f5c06441c04b3677b3c2cf6c` did not satisfy P0-AC-021 (the repository secret scan scanned 0 commits after a Git revision-range failure yet reported success); remediated by C9 `1b90511756e66620c00c87e14943324529d2922f` (fail-closed full-history scan). Recorded retrospectively by owner lifecycle determination (2026-10-04) | `docs/phases/evidence/phase-0/verification-record.md` Run 6, R6.3; `docs/phases/evidence/phase-0/engineering-review.md` Run 6, L1-R6-1 |
 | 2026-10-04 | In Progress     | Verification | Transition rule satisfied by verification Run 6 at C9 (no FAIL; only permitted BLOCKED; no STOP). Recorded retrospectively by owner lifecycle determination (2026-10-04) | `docs/phases/evidence/phase-0/verification-record.md` Run 6, R6.1–R6.8 |
+| 2026-10-04 | Verification    | In Progress | Required verification failed: verification Run 7 at C10 `2d9bf722cd38b9032425a960c3feac55a294bbf7` ended in STOP (R7-L2-ARCH-2, R7-L2-ARCH-3 required owner decisions), which results in FAIL. Later verification Runs 8, 10, 11, 13 and 14 also ended in STOP and FAIL; no transition back to Verification is established between them, so they record no further transition. Recorded retrospectively by owner lifecycle determination (2026-10-05, R14-L2-VER-1 option (a)) | `docs/phases/evidence/phase-0/verification-record.md` R14.9, R14.10; Runs 7–12 notes; R13.11; R14.8 |
+| 2026-10-05 | In Progress     | Verification | Transition rule satisfied by verification Run 15 at C14 `d2570ad8f14b0863b3643fca36c8f107a2bdb406` with the recorded evidence and lifecycle record as its baseline (no FAIL; no BLOCKED; no STOP; Layer 1 and all five Layer 2 runtime reviews PASS) | `docs/phases/evidence/phase-0/verification-record.md` Run 15, R15.1–R15.11 |
+| 2026-10-05 | Verification    | Complete    | Completion decision recorded on 2026-10-05: "Phase 0 is Complete." (decision authority: Project Owner), following the Final Verification (FV.1–FV.17); all Transition to Complete conditions are recorded in CD.2 | Phase 0 document, Completion Decision; `docs/phases/evidence/phase-0/verification-record.md` Completion Decision record (CD.2, CD.3) |
 
 Status history is append-only.
 
 ### Final Verification
 
-To be completed when Phase 0 enters `Verification`. Results are recorded in `docs/phases/evidence/phase-0/verification-record.md`.
+Performed 2026-10-05. Results are recorded in `docs/phases/evidence/phase-0/verification-record.md`, section "Final Verification — 2026-10-05" (FV.1–FV.17).
+
+- **Substantive verification basis:** verification Run 15 (2026-10-05T11:26:41Z – 12:27:55Z): deterministic suite PASS=21, FAIL=0, BLOCKED=0, NOT APPLICABLE=2; S2 PASS; Layer 1 PASS; contradiction review completed; all five Layer 2 runtime reviews PASS, each reviewer reporting exactly `Read, Grep, Glob`; no FAIL, no BLOCKED, no STOP.
+- **Post-recording confirmation (separate from Run 15):** R15-PR0 (2026-10-05T12:43:52Z, `working_tree_content_hash` `0654135cba894015b256c11ad806433476610647037892d6a598ccb7b5cf3bf8`) and R15-PR1 (12:44:18Z, unchanged): all 23 verifier results identical to Run 15, with CONTINUE, against the post-recording baseline rather than the Run 15 baseline.
+- **Commit and content identity:** C14 `d2570ad8f14b0863b3643fca36c8f107a2bdb406` is the committed state from which the uncommitted evidence work began; it does not contain the recorded evidence or lifecycle changes. The verified states are identified by their content hashes (FV.1).
+- **Lifecycle:** the Status History chains through permitted transitions; `## Status` is `Verification`, equal to the latest row (Run 15 re-entry, supported by R15.1–R15.11 and confirmed by R15-PR0). No other transition is recorded.
+- **Acceptance gate:** `VER-P0-ACCEPT-001` PASS; version relationships hold for ACC-001 to ACC-010.
+- **Canonical version:** v0.3 is the single `Accepted` version identified by the canonical README; unchanged since C1.
+- **CI execution (P0-AC-021):** `VER-P0-CI-EXEC` PASS for run `37204397037`; fixture removal within the job is established by construction (`scripts/checks/gitleaks-controls.sh`), not observed in the log.
+- **Repository protection (P0-AC-022):** `VER-P0-REPO-PROTECTION` PASS; `main` requires `Secret scanning` (app 15368).
+- **ADR gate:** no new consequential architectural decision was introduced (owner classification of 2026-10-04); no ADR is required; the gate is satisfied.
+- **Contradiction review:** no unresolved governance contradiction (Run 15).
+- **Known Limitations:** the limitation "The repository has no remote; CI execution and repository protection cannot be verified until one exists" is resolved: the remote exists, and CI execution and repository protection are verified. The accepted text is left unchanged by owner determination.
+- **Prose-version sweep:** no generic governance prose hard-codes a canonical specification version.
+- **Evidence integrity:** all evidence changes since C14 are append-only; corrections are recorded as notes; seven whitespace-only lines inside verbatim reviewer reports are preserved as genuine verbatim content.
+- **Residual Layer 2 findings:** catalogued in FV.15 without disposition. Their owner dispositions belong to the Completion Decision.
+- **Transition to Complete:** every condition except the recorded completion decision is evidenced (FV.16). No completion decision is recorded here.
 
 ### Completion Decision
 
-To be completed only after successful verification.
-
 ```text
-Decision: Pending
-Verified By: Pending
-Verification Date: Pending
-Evidence: Pending
+Decision: Phase 0 is Complete.
+Decision authority: Project Owner
+Verified By: Deterministic verifier scripts/verify-phase.sh; main Claude Code session (orchestration, Layer 1 and contradiction review; not independent); Layer 2 reviewer agents architecture-reviewer, security-reviewer, ai-engineering-reviewer, verification-reviewer and documentation-reviewer (independent, read-only) — verification Run 15; Final Verification FV.1–FV.17
+Verification Date: 2026-10-05
+Evidence: docs/phases/evidence/phase-0/verification-record.md Run 15 (R15.1–R15.12), Final Verification (FV.1–FV.17) and Completion Decision record (CD.1–CD.9)
 ```
+
+The completion criteria, finding dispositions and CI boundary supporting this decision are recorded in `docs/phases/evidence/phase-0/verification-record.md`, section "Completion Decision record" (CD.1–CD.9). Post-push CI execution of commits after C9 has not yet occurred and is recorded when it occurs (CD.7).
