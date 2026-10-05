@@ -1,7 +1,7 @@
 # Sentinel AI — Architecture Decision Record Governance
 
 **File:** `docs/decisions/README.md`  
-**Status:** Accepted  
+**Status:** Proposed  
 **Owner:** Engineering  
 **Authority:** ADR process and index
 
@@ -44,7 +44,7 @@ An ADR is normally unnecessary for:
 - ADR files live only under `docs/decisions/adr/`, named `ADR-NNNN-<kebab-title>.md`.
 - The `docs/decisions/adr/` directory is created together with the first actual `Proposed` ADR. No placeholder file is created before then.
 - This README is the sole ADR governance document and the sole ADR index.
-- `docs/decisions/decision-register.md` is not an ADR. It records phase tooling selections, deferred decisions, architectural dependencies, and deferred governance improvements.
+- `docs/decisions/decision-register.md` is not an ADR. It records phase-level tooling selections, phase-level owner decisions and deferrals that are within the authority of the accepted product, architecture and governance model, deferred architectural decisions, architectural dependencies, and deferred governance improvements. It is a recording mechanism: it records decisions but does not create, override or supersede architectural decisions, accepted requirements, or the current Accepted canonical specification, and it does not replace ADRs. Consequential architectural decisions are recorded only by ADRs (§2). Acceptance of documents is recorded only in `docs/architecture/acceptance-register.md`.
 
 ## 3b. Document Acceptance and ADR Decision Acceptance
 
