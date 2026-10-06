@@ -130,6 +130,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | pnpm `11.28.4` |
 | Version and pinning | Exact version in the root `package.json` `packageManager` field, with the registry sha512 hash |
 | Rationale | Strict, non-flat `node_modules`; workspace and lockfile support; the version 11 line is mature and still patched |
+| Selection criteria and supply-chain considerations | Locked installation from a committed lockfile; workspace support with root scripts and no task runner (P1-OD-05); strict, non-flat `node_modules` that prevents use of undeclared dependencies. Supply chain: exact version pinned with its registry sha512 hash; a maintained release line preferred over a new major |
 | Rejected alternatives | pnpm `12.9.1` (new major); npm |
 | Authority basis | Phase 0 document, Out of Scope (package manager assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -147,6 +148,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | Node.js `24.21.0` (LTS line 24) |
 | Version and pinning | Exact version in `.node-version`; root `package.json` `engines` `>=24.21.0 <25` |
 | Rationale | LTS line; within the declared engine ranges of the selected JavaScript tools |
+| Selection criteria and supply-chain considerations | LTS release line with security support beyond Phase 1 (end of life 2028-04-30); within the declared Node.js engine ranges of the selected JavaScript tools. Supply chain and reproducibility: exact patch version pinned for local and CI use |
 | Rejected alternatives | Node.js 26 (not LTS at the decision date) |
 | Authority basis | Phase 0 document, Out of Scope (ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -163,6 +165,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | TypeScript `6.0.3`; compiler baseline `strict`, `noUncheckedIndexedAccess`, `noEmit`, `isolatedModules` |
 | Version and pinning | Exact; configuration local to `apps/web` (P1-OD-03) |
 | Rationale | Next.js `16.3.8` installs `typescript@^6.0.0` by default |
+| Selection criteria and supply-chain considerations | Compatible with Next.js 16.3.8, which installs `typescript@^6.0.0` by default; supports a strict compiler baseline. Supply chain: exact pin |
 | Rejected alternatives | TypeScript `7.0.2` |
 | Authority basis | Phase 0 document, Out of Scope (type checker assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -179,6 +182,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | `next` `16.3.8`; `react`, `react-dom`, `@types/react`, `@types/react-dom` `19.3.0`; `@types/node` `24.19.1` |
 | Version and pinning | Exact; `react`, `react-dom` and their type packages change together; Next.js telemetry disabled |
 | Rationale | Current major; declared peer ranges satisfied; no frontend API calls in Phase 1 (P1-OD-11) |
+| Selection criteria and supply-chain considerations | Selected versions satisfy their declared peer and engine requirements (`react`/`react-dom` 19.3.0 with Next.js 16.3.8; Node.js 24.21.0); current major line. Supply chain: exact pins; vulnerability exposure is governed by P1-S-17 |
 | Rejected alternatives | Next.js 15.x |
 | Authority basis | Canonical specification §5, §6; P1-OD-01; P1-OD-11 |
 | Phase | P1 |
@@ -195,6 +199,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | `@biomejs/biome` `2.5.15`, for linting and formatting of `apps/web` |
 | Version and pinning | Exact; scoped to `apps/web`; no Biome configuration at the repository root; no Prettier, ESLint or `eslint-config-next` |
 | Rationale | ESLint 9 reached end-of-life on 2026-08-06; ESLint 10 conflicts with the declared peer ranges of plugins required by `eslint-config-next` `16.3.8`; Biome provides linting and formatting in one tool, with React-oriented and accessibility-oriented rules, without that dependency chain |
+| Selection criteria and supply-chain considerations | A supported release line: ESLint 9 reached end-of-life on 2026-08-06, and ESLint 10 conflicts with the declared peer ranges of the plugins required by `eslint-config-next` 16.3.8; linting and formatting in one tool; React-oriented and accessibility-oriented rule coverage; placement keeps `VER-P0-FORMAT-001` not applicable. Supply chain: no install scripts; platform-specific binaries are delivered through optional packages; exact pin |
 | Rejected alternatives | ESLint 9 with `eslint-config-next` (end-of-life); ESLint 10 with `eslint-config-next` (peer conflicts); Prettier |
 | Authority basis | Phase 0 document, Out of Scope (formatter and linter assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -212,6 +217,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | `vitest` `5.0.3`; `vite` `8.3.2`; `jsdom` `30.1.2`; `@testing-library/react` `16.3.3`; `@testing-library/dom` `10.4.2` |
 | Version and pinning | Exact |
 | Rationale | `vite` `8.3.2` satisfies Vitest's declared peer range; `jsdom` supports the selected Node.js version |
+| Selection criteria and supply-chain considerations | Peer and engine compatibility of the test stack (`vite` 8.3.2 within Vitest 5.0.3's peer range; Vitest, `jsdom` and Testing Library compatible with the selected Node.js and React versions); a reproducible test stack. Supply chain: exact pins |
 | Rejected alternatives | Jest 30 |
 | Authority basis | Phase 0 document, Out of Scope (test runner assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -229,6 +235,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | Python `3.14.8` |
 | Version and pinning | `.python-version` `3.14.8`; `requires-python` `>=3.14,<3.15` |
 | Rationale | Supported until 2030-10-31; all selected Python tools require Python 3.10 or later |
+| Selection criteria and supply-chain considerations | Security support until 2030-10-31; meets the minimum Python version of every selected Python tool and of the existing standard-library scripts (Python 3.9 or later). Supply chain: exact patch version pinned |
 | Rejected alternatives | Python 3.13 |
 | Authority basis | Phase 0 document, Out of Scope (ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -245,6 +252,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | uv `0.12.23` |
 | Version and pinning | `[tool.uv] required-version = "==0.12.23"`; `uv.lock` committed; `pre-commit` declared in the development dependency group |
 | Rationale | Lockfile, workspace and interpreter management; built-in dependency audit |
+| Selection criteria and supply-chain considerations | Committed lockfile with locked installs; workspace and dependency management for the `services/` packages; interpreter management for P1-S-08; built-in audit capability for P1-OD-07. Supply chain: a pre-1.0 tool, so the exact version is enforced through `required-version` |
 | Rejected alternatives | Poetry `2.5.1` |
 | Authority basis | Phase 0 document, Out of Scope (package manager assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -261,6 +269,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | `fastapi` `0.142.2`; `uvicorn` `0.54.0`; without the `[standard]` extra |
 | Version and pinning | Exact direct versions; transitive versions fixed by `uv.lock` |
 | Rationale | Minimal service shell; FastAPI/OpenAPI is the HTTP API contract authority |
+| Selection criteria and supply-chain considerations | Minimal Phase 1 service shell under the FastAPI/OpenAPI contract authority; explicit dependencies without the `[standard]` extra. Supply chain: exact direct pins, with transitive versions fixed by `uv.lock` |
 | Rejected alternatives | Granian; Hypercorn |
 | Authority basis | Canonical specification §5; P1-OD-01 |
 | Phase | P1 |
@@ -277,6 +286,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | Ruff `0.16.10`, for linting and formatting of `services/`, with the security (`S`) rules enabled |
 | Version and pinning | Exact |
 | Rationale | One tool for linting and formatting |
+| Selection criteria and supply-chain considerations | Linting and formatting in one tool, scoped to `services/`; security (`S`) rules per the Phase 1 security requirements; compatible with keeping `VER-P0-FORMAT-001` not applicable. Supply chain: exact pin |
 | Rejected alternatives | Black with flake8 and isort |
 | Authority basis | Phase 0 document, Out of Scope (formatter and linter assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -293,6 +303,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | mypy `2.4.0`, strict mode; run as a command and in CI, not as a pre-commit hook |
 | Version and pinning | Exact |
 | Rationale | Pure Python; no runtime download of a Node.js runtime |
+| Selection criteria and supply-chain considerations | Strict type checking compatible with the locked project environment; pure Python. Supply chain: no runtime download of a Node.js runtime or npm package; exact pin |
 | Rejected alternatives | pyright |
 | Authority basis | Phase 0 document, Out of Scope (type checker assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -309,6 +320,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | pytest `9.1.1`; httpx `0.28.1` (development only) |
 | Version and pinning | Exact |
 | Rationale | Standard Python test runner; FastAPI's test client requires httpx |
+| Selection criteria and supply-chain considerations | Suitable for the FastAPI shell tests; FastAPI's test client requires httpx, which is classified as development-only. Supply chain: exact pins |
 | Rejected alternatives | unittest |
 | Authority basis | Phase 0 document, Out of Scope (test runner assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
@@ -325,6 +337,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | import-linter `2.15`, with forbidden contracts only: one for Platform importing neither Application nor Domains (canonical specification §9), and one each for P1-ED-01, P1-ED-02 and P1-ED-03. No layers contract |
 | Version and pinning | Exact |
 | Rationale | Forbidden contracts map one-to-one onto the enforced rules without permitting or forbidding the edges deferred under P1-OD-02 |
+| Selection criteria and supply-chain considerations | Deterministic import-rule enforcement; forbidden contracts map one-to-one onto the canonical §9 rule and the enforcement dispositions P1-ED-01 to P1-ED-03; no layers contract, so the edges deferred under P1-OD-02 are not resolved by configuration. Supply chain: exact pin |
 | Rejected alternatives | Tach; a custom script |
 | Authority basis | Canonical specification §4, §8, §9; P1-ED-01 to P1-ED-03; P1-OD-01 |
 | Phase | P1 |
@@ -342,6 +355,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | A repository check script using only the Python standard library, which checks the `apps/web` manifest and the pnpm lockfile against an explicit, reviewable prohibited-package list |
 | Version and pinning | Not applicable (repository code) |
 | Rationale | Deterministic; checks dependency declarations as task 1.8 specifies; adds no dependency |
+| Selection criteria and supply-chain considerations | Deterministic check of declared `apps/web` dependencies against the explicit, authoritative prohibited-package list; implemented with the Python standard library. Supply chain: no additional third-party dependency |
 | Rejected alternatives | dependency-cruiser |
 | Authority basis | Canonical specification §6; P1-OD-01 |
 | Phase | P1 |
@@ -361,6 +375,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Policy | Any known advisory fails, regardless of severity. Development-only and transitive dependencies are included. An advisory with no available fix fails. An exception exists only when approved by the Project Owner and recorded in §9. A nonzero audit result caused by one or more advisories not covered by a §9 exception is FAIL. An execution or tooling failure that prevents a trustworthy audit result, including an unreachable advisory service or offline execution, is BLOCKED, never PASS. Each audit run records its date and tool version |
 | Exception mechanisms | uv: `uv audit --ignore-until-fixed <ID>` for each §9 exception where it is appropriate. pnpm: the GHSA-based `audit.ignore` mechanism, listing only GHSA IDs recorded in §9. A pnpm `audit.ignore` entry does not lapse when a fix becomes available, so each pnpm exception is reviewed by its §9 review date and removed when it is no longer approved. Suppression not backed by a §9 entry, and wholesale or severity-wide suppression, are prohibited |
 | Rationale | P1-OD-07 requires scanning with the selected package-management tooling |
+| Selection criteria and supply-chain considerations | Uses the selected package-management tooling (P1-OD-07); covers the full lockfile, including transitive and development-only dependencies; any-severity policy, because `uv audit` offers no severity threshold; date and tool version recorded per run because advisory data changes over time. Supply chain: no additional scanner dependency; suppression only through §9 |
 | Rejected alternatives | osv-scanner; pip-audit |
 | Authority basis | P1-OD-07; canonical specification §21; P1-OD-01 |
 | Phase | P1 |
@@ -378,6 +393,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Selection | The existing Gitleaks hook, unchanged (DR-P0-001, DR-P0-002), plus the `ruff-check` hook from `https://github.com/astral-sh/ruff-pre-commit` at commit `f12be1ebaa5351c1fc76472de98db2c3446c8253` (tag `v0.16.10`), with `files: ^services/`, check-only (no `--fix`) |
 | Version and pinning | Pinned by commit; the Ruff hook version equals P1-S-11 |
 | Rationale | The hook runs in a pre-commit-managed environment, needs neither the project virtual environment nor `node_modules`, and keeps the Phase 0 pre-commit controls and `VER-P0-FORMAT-001` results unchanged |
+| Selection criteria and supply-chain considerations | Runs in a pre-commit-managed isolated environment, compatible with the Phase 0 bare-copy pre-commit control; check-only and scoped to `services/`; Gitleaks unchanged. Supply chain: hook repository pinned by commit SHA rather than a mutable tag; hook version aligned with P1-S-11 |
 | Rejected alternatives | A `ruff-format` hook; hooks that depend on the project environment |
 | Authority basis | DR-P0-002 rationale (formatter, linter and type-check hooks belong to Phase 1); P1-OD-01 |
 | Phase | P1 |
