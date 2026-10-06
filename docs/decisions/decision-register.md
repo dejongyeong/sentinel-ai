@@ -127,16 +127,17 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decision | Decided |
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
-| Selection | pnpm `11.28.4` |
-| Version and pinning | Exact version in the root `package.json` `packageManager` field, with the registry sha512 hash |
-| Rationale | Strict, non-flat `node_modules`; workspace and lockfile support; the version 11 line is mature and still patched |
-| Selection criteria and supply-chain considerations | Locked installation from a committed lockfile; workspace support with root scripts and no task runner (P1-OD-05); strict, non-flat `node_modules` that prevents use of undeclared dependencies. Supply chain: exact version pinned with its registry sha512 hash; a maintained release line preferred over a new major |
-| Rejected alternatives | pnpm `12.9.1` (new major); npm |
+| Revision | 2026-10-06: revised from pnpm `11.28.4` (recorded in commit `68474a3`) to `12.9.1` by Project Owner decision during toolchain reconciliation. The previous selection and its rationale are superseded |
+| Selection | pnpm `12.9.1` |
+| Version and pinning | Exact version in the root `package.json` `packageManager` field, with the registry sha512 hash (registry integrity `sha512-BrBV//XNINwSeB3hc87TMQzglRvy7GICEaFgRdVETVyTpmMhB2TvKaZTphBFm6A2jw50+E2AxUcjz5Wq57wNbQ==`) |
+| Rationale | Strict, non-flat `node_modules`; workspace and lockfile support; `12.9.1` is the registry's `latest` release at selection (published 2026-10-03, not deprecated) |
+| Selection criteria and supply-chain considerations | Locked installation from a committed lockfile; workspace support with root scripts and no task runner (P1-OD-05); strict, non-flat `node_modules` that prevents use of undeclared dependencies. Supply chain: exact version pinned with its registry sha512 hash; the registry's current `latest` release at selection |
+| Rejected alternatives | pnpm `11.28.4` (previous selection; older major line); npm |
 | Authority basis | Phase 0 document, Out of Scope (package manager assigned to Phase 1; ACC-008); P1-OD-01 |
 | Phase | P1 |
 | Consumed by | Tasks 1.5, 1.15 |
 | Evidence | Pending — `VER-P1-BOOTSTRAP-001`, `VER-P1-DEPS-001` |
-| Notes | On 2026-10-06 the registry `latest-11` dist-tag pointed to `11.28.2`; `11.28.4` (published 2026-10-03, not deprecated) is selected. Task 1.15 settles the discrepancy |
+| Notes | Bootstrap consideration, not a selection criterion: Corepack is not bundled with Node.js 25 or later, so pnpm `12.9.1` is installed independently |
 
 ### P1-S-03 — Node.js version
 
@@ -145,11 +146,12 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decision | Decided |
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
-| Selection | Node.js `24.21.0` (LTS line 24) |
-| Version and pinning | Exact version in `.node-version`; root `package.json` `engines` `>=24.21.0 <25` |
-| Rationale | LTS line; within the declared engine ranges of the selected JavaScript tools |
-| Selection criteria and supply-chain considerations | LTS release line with security support beyond Phase 1 (end of life 2028-04-30); within the declared Node.js engine ranges of the selected JavaScript tools. Supply chain and reproducibility: exact patch version pinned for local and CI use |
-| Rejected alternatives | Node.js 26 (not LTS at the decision date) |
+| Revision | 2026-10-06: revised from Node.js `24.21.0` (recorded in commit `68474a3`) to `26.10.0` by Project Owner decision during toolchain reconciliation. The previous LTS-based rationale is superseded |
+| Selection | Node.js `26.10.0` (major line 26) |
+| Version and pinning | Exact version in `.node-version`; root `package.json` `engines` `>=26.10.0 <27` |
+| Rationale | Node.js 26 is the selected major line. It is not LTS at the decision date; it becomes LTS on 2026-10-28 and is supported until 2029-04-30. `26.10.0` is the latest 26.x patch at selection |
+| Selection criteria and supply-chain considerations | Latest 26.x patch at selection (released 2026-09-21), including the 26.3.1 and 26.5.1 security releases; within the declared Node.js engine ranges of the selected JavaScript tools; support horizon to 2029-04-30. Supply chain and reproducibility: exact patch version pinned for local and CI use |
+| Rejected alternatives | Node.js `26.1.0` (predates the 26.3.1 and 26.5.1 security releases); Node.js `24.21.0` (previous selection; shorter remaining support, end of life 2028-04-30) |
 | Authority basis | Phase 0 document, Out of Scope (ACC-008); P1-OD-01 |
 | Phase | P1 |
 | Consumed by | Tasks 1.5, 1.16 |
@@ -179,10 +181,11 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decision | Decided |
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
-| Selection | `next` `16.3.8`; `react`, `react-dom`, `@types/react`, `@types/react-dom` `19.3.0`; `@types/node` `24.19.1` |
+| Revision | 2026-10-06: `@types/node` revised from `24.19.1` to `26.6.4` to follow the P1-S-03 revision. Next.js, React, React DOM and their type packages are unchanged |
+| Selection | `next` `16.3.8`; `react`, `react-dom`, `@types/react`, `@types/react-dom` `19.3.0`; `@types/node` `26.6.4` |
 | Version and pinning | Exact; `react`, `react-dom` and their type packages change together; Next.js telemetry disabled |
 | Rationale | Current major; declared peer ranges satisfied; no frontend API calls in Phase 1 (P1-OD-11) |
-| Selection criteria and supply-chain considerations | Selected versions satisfy their declared peer and engine requirements (`react`/`react-dom` 19.3.0 with Next.js 16.3.8; Node.js 24.21.0); current major line. Supply chain: exact pins; vulnerability exposure is governed by P1-S-17 |
+| Selection criteria and supply-chain considerations | Selected versions satisfy their declared peer and engine requirements (`react`/`react-dom` 19.3.0 with Next.js 16.3.8; Node.js 26.10.0 within Next.js's `>=20.9.0` engine range); `@types/node` follows the selected Node.js major line; current major line. Supply chain: exact pins; vulnerability exposure is governed by P1-S-17 |
 | Rejected alternatives | Next.js 15.x |
 | Authority basis | Canonical specification §5, §6; P1-OD-01; P1-OD-11 |
 | Phase | P1 |
@@ -249,8 +252,9 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decision | Decided |
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
+| Revision | 2026-10-06: `pre-commit` pinned at `4.6.2` in the development dependency group by Project Owner decision during toolchain reconciliation. The uv selection is unchanged |
 | Selection | uv `0.12.23` |
-| Version and pinning | `[tool.uv] required-version = "==0.12.23"`; `uv.lock` committed; `pre-commit` declared in the development dependency group |
+| Version and pinning | `[tool.uv] required-version = "==0.12.23"`; `uv.lock` committed; `pre-commit` `4.6.2` declared in the development dependency group |
 | Rationale | Lockfile, workspace and interpreter management; built-in dependency audit |
 | Selection criteria and supply-chain considerations | Committed lockfile with locked installs; workspace and dependency management for the `services/` packages; interpreter management for P1-S-08; built-in audit capability for P1-OD-07. Supply chain: a pre-1.0 tool, so the exact version is enforced through `required-version` |
 | Rejected alternatives | Poetry `2.5.1` |
@@ -258,6 +262,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Phase | P1 |
 | Consumed by | Tasks 1.5, 1.15 |
 | Evidence | Pending — `VER-P1-BOOTSTRAP-001`, `VER-P1-DEPS-001` |
+| Notes | `pre-commit` is declared rather than installed separately because the Phase 0 verification workflow runs from the root environment, and `uv sync` removes undeclared packages |
 
 ### P1-S-10 — FastAPI version and ASGI server
 
@@ -266,15 +271,17 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decision | Decided |
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
-| Selection | `fastapi` `0.142.2`; `uvicorn` `0.54.0`; without the `[standard]` extra |
-| Version and pinning | Exact direct versions; transitive versions fixed by `uv.lock` |
-| Rationale | Minimal service shell; FastAPI/OpenAPI is the HTTP API contract authority |
-| Selection criteria and supply-chain considerations | Minimal Phase 1 service shell under the FastAPI/OpenAPI contract authority; explicit dependencies without the `[standard]` extra. Supply chain: exact direct pins, with transitive versions fixed by `uv.lock` |
-| Rejected alternatives | Granian; Hypercorn |
+| Revision | 2026-10-06: `pydantic` `2.13.5` and `pydantic-settings` `2.15.0` added as direct runtime dependencies by Project Owner decision during toolchain reconciliation. FastAPI and Uvicorn are unchanged |
+| Selection | `fastapi` `0.142.2`; `uvicorn` `0.54.0`; `pydantic` `2.13.5`; `pydantic-settings` `2.15.0`; all direct runtime dependencies; FastAPI without the `[standard]` extra or any other extra |
+| Version and pinning | Exact direct versions; transitive versions (including `pydantic-core`, `python-dotenv` and `opentelemetry-api`) fixed by `uv.lock` |
+| Rationale | Minimal service shell; FastAPI/OpenAPI is the HTTP API contract authority. The Phase 1 configuration foundation uses Pydantic and Pydantic Settings directly, so both are explicit dependencies rather than transitive ones |
+| Selection criteria and supply-chain considerations | Minimal Phase 1 service shell under the FastAPI/OpenAPI contract authority; explicit dependencies without FastAPI extras. `pydantic` `2.13.5` satisfies FastAPI 0.142.2's `pydantic>=2.9.0` and declares Python 3.14 support; `pydantic-settings` `2.15.0` requires Python 3.10 or later and `pydantic>=2.7.0`, and provides the configuration foundation without a hand-written mechanism. Supply chain: exact direct pins, with transitive versions fixed by `uv.lock` and covered by P1-S-17 |
+| Rejected alternatives | Granian; Hypercorn; a hand-written standard-library configuration mechanism |
 | Authority basis | Canonical specification §5; P1-OD-01 |
 | Phase | P1 |
 | Consumed by | Task 1.6 |
 | Evidence | Pending — `VER-P1-API-SHELL-001` |
+| Notes | `opentelemetry-api` is a required dependency of FastAPI 0.142.2 itself; it is transitive only and implements no telemetry (observability remains P7) |
 
 ### P1-S-11 — Python linting and formatting
 
@@ -370,7 +377,8 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decision | Decided |
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
-| Selection | `pnpm audit` (pnpm `11.28.4`) for the JavaScript dependency graph; `uv audit` (uv `0.12.23`) for the Python dependency graph |
+| Revision | 2026-10-06: the pnpm version reference revised from `11.28.4` to `12.9.1` to follow the P1-S-01 revision. The policy and exception mechanisms are unchanged |
+| Selection | `pnpm audit` (pnpm `12.9.1`) for the JavaScript dependency graph; `uv audit` (uv `0.12.23`) for the Python dependency graph |
 | Version and pinning | Follows P1-S-01 and P1-S-09 |
 | Policy | Any known advisory fails, regardless of severity. Development-only and transitive dependencies are included. An advisory with no available fix fails. An exception exists only when approved by the Project Owner and recorded in §9. A nonzero audit result caused by one or more advisories not covered by a §9 exception is FAIL. An execution or tooling failure that prevents a trustworthy audit result, including an unreachable advisory service or offline execution, is BLOCKED, never PASS. Each audit run records its date and tool version |
 | Exception mechanisms | uv: `uv audit --ignore-until-fixed <ID>` for each §9 exception where it is appropriate. pnpm: the GHSA-based `audit.ignore` mechanism, listing only GHSA IDs recorded in §9. A pnpm `audit.ignore` entry does not lapse when a fix becomes available, so each pnpm exception is reviewed by its §9 review date and removed when it is no longer approved. Suppression not backed by a §9 entry, and wholesale or severity-wide suppression, are prohibited |
