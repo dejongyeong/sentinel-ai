@@ -231,7 +231,7 @@ No package is created only to make the dependency graph testable.
 
 ## Engineering Foundation Requirements
 
-Tool names appear only as candidates. Each choice is an owner selection (task 1.1).
+Each choice is an owner selection (task 1.1), recorded in `docs/decisions/decision-register.md` §8 (P1-S-01, P1-S-03 to P1-S-15, P1-S-17, P1-S-18).
 
 ### Target engineering foundation
 
@@ -277,13 +277,13 @@ Tool names appear only as candidates. Each choice is an owner selection (task 1.
 
 ### TypeScript requirements
 
-- [Owner decision] TypeScript version and compiler baseline (S-04), not yet selected. TypeScript configuration stays local to `apps/web` (P1-OD-03).
+- [Owner decision, decided — P1-S-04] TypeScript version and compiler baseline (S-04). TypeScript configuration stays local to `apps/web` (P1-OD-03).
 - [Proposed — operationalizes `docs/phases/README.md` §18] A type-check command exists and passes for all TypeScript code (task 1.12).
 - [Constraint] No TypeScript code independently defines the HTTP API contract (§5).
 
 ### Python requirements
 
-- [Owner decision] Python version and project/dependency manager (S-08, S-09), not yet selected.
+- [Owner decision, decided — P1-S-08, P1-S-09] Python version and project/dependency manager (S-08, S-09).
 - [Fact] Existing scripts require Python ≥ 3.9 and use only the standard library. The project's Python version must not break `scripts/verify-phase.sh` or `scripts/checks/repo_snapshot.py`.
 - [Proposed] The service and layer packages are importable in an environment created from a committed lock (tasks 1.5–1.7).
 
@@ -292,7 +292,7 @@ Tool names appear only as candidates. Each choice is an owner selection (task 1.
 - [Proposed] `apps/web` builds and has at least one test (task 1.8).
 - [Constraint] It does not directly access PostgreSQL, Redis, queues, LLM providers or internal credentials (§6).
 - [Proposed — operationalizes §6] A deterministic dependency check on `apps/web` (task 1.8).
-- [Owner decision] Next.js version (S-05), not yet selected.
+- [Owner decision, decided — P1-S-05] Next.js version (S-05).
 - [Owner decision, decided — P1-OD-11] `apps/web` makes no API calls in Phase 1. No proxy, backend-for-frontend or other new trust boundary is introduced.
 
 ### FastAPI foundation requirements
@@ -300,7 +300,7 @@ Tool names appear only as candidates. Each choice is an owner selection (task 1.
 - [Proposed] `services/api` exposes a health endpoint and generates its OpenAPI document, with tests (task 1.6).
 - [Constraint] No persistence, authentication, Redis, queue or provider integration (Out of Scope).
 - [Proposed — follows `docs/security/security-baseline.md` §3] Configuration comes from the environment. Only a non-secret `.env.example` may be committed.
-- [Owner decision] FastAPI version and ASGI server (S-10), not yet selected.
+- [Owner decision, decided — P1-S-10] FastAPI version and ASGI server (S-10).
 
 ### Application / Domain / Platform boundaries
 
@@ -418,28 +418,28 @@ Orchestrate the Project Owner's Phase 1 toolchain selections. Each selection is 
 - **ID:** 1.1 (orchestration).
 - **Dependencies:** P1-OD-01 (recorded). S-02 is NOT APPLICABLE under P1-OD-05; S-16 is NOT APPLICABLE under P1-OD-04; S-17 is applicable under P1-OD-07.
 
-Every applicable selection is recorded in `docs/decisions/decision-register.md` (P1-OD-01) and verified by `VER-P1-SELECTIONS-001`. No selection has been made yet. The consuming task's check provides the working evidence.
+Every applicable selection is recorded in `docs/decisions/decision-register.md` (P1-OD-01) and verified by `VER-P1-SELECTIONS-001`. The applicable selections are recorded as P1-S-01, P1-S-03 to P1-S-15, P1-S-17 and P1-S-18 in §8 of the register; this table references them and does not restate them. The consuming task's check provides the working evidence.
 
 | ID | Selection | Gate | Applicable / NOT APPLICABLE | Consumed by | Working evidence |
 | -- | --------- | ---- | --------------------------- | ----------- | ---------------- |
-| S-01 | JavaScript package and workspace manager (candidate: pnpm) | — | Always | 1.5 | `VER-P1-BOOTSTRAP-001` |
-| S-02 | Task runner (candidate: Turborepo) | OD-05 | **NOT APPLICABLE** — no task runner in Phase 1 (P1-OD-05); not a permanent rejection | — | — |
-| S-03 | Node.js version | — | Always | 1.5 | `VER-P1-BOOTSTRAP-001` |
-| S-04 | TypeScript version and compiler baseline | — | Always | 1.8, 1.12 | `VER-P1-WEB-SHELL-001`, `VER-P1-TYPECHECK-001` |
-| S-05 | Next.js version | — | Always | 1.8 | `VER-P1-WEB-SHELL-001` |
-| S-06 | TypeScript linting and formatting tools (candidates include ESLint, Biome, Prettier) | — | Always | 1.10, 1.11 | `VER-P1-LINT-001`, `VER-P1-FORMAT-001` |
-| S-07 | TypeScript test runner | — | Always | 1.13 | `VER-P1-TEST-001` |
-| S-08 | Python version | — | Always | 1.5 | `VER-P1-BOOTSTRAP-001` |
-| S-09 | Python project and dependency manager | — | Always | 1.5 | `VER-P1-BOOTSTRAP-001` |
-| S-10 | FastAPI version and ASGI server | — | Always | 1.6 | `VER-P1-API-SHELL-001` |
-| S-11 | Python linting and formatting tools (candidates include Ruff) | — | Always | 1.10, 1.11 | `VER-P1-LINT-001`, `VER-P1-FORMAT-001` |
-| S-12 | Python type checker (candidates include mypy, pyright) | — | Always | 1.12 | `VER-P1-TYPECHECK-001` |
-| S-13 | Python test runner (candidates include pytest) | — | Always | 1.13 | `VER-P1-TEST-001` |
-| S-14 | Python import-rule enforcement tool | — | Always | 1.7 | `VER-P1-BOUNDARIES-001` |
-| S-15 | Frontend dependency-restriction mechanism | — | Always | 1.8 | `VER-P1-WEB-SHELL-001` |
+| S-01 | JavaScript package and workspace manager | — | Applicable — recorded as P1-S-01 | 1.5 | `VER-P1-BOOTSTRAP-001` |
+| S-02 | Task runner | OD-05 | **NOT APPLICABLE** — no task runner in Phase 1 (P1-OD-05); not a permanent rejection | — | — |
+| S-03 | Node.js version | — | Applicable — recorded as P1-S-03 | 1.5 | `VER-P1-BOOTSTRAP-001` |
+| S-04 | TypeScript version and compiler baseline | — | Applicable — recorded as P1-S-04 | 1.8, 1.12 | `VER-P1-WEB-SHELL-001`, `VER-P1-TYPECHECK-001` |
+| S-05 | Next.js version | — | Applicable — recorded as P1-S-05 | 1.8 | `VER-P1-WEB-SHELL-001` |
+| S-06 | TypeScript linting and formatting tools | — | Applicable — recorded as P1-S-06 | 1.10, 1.11 | `VER-P1-LINT-001`, `VER-P1-FORMAT-001` |
+| S-07 | TypeScript test runner | — | Applicable — recorded as P1-S-07 | 1.13 | `VER-P1-TEST-001` |
+| S-08 | Python version | — | Applicable — recorded as P1-S-08 | 1.5 | `VER-P1-BOOTSTRAP-001` |
+| S-09 | Python project and dependency manager | — | Applicable — recorded as P1-S-09 | 1.5 | `VER-P1-BOOTSTRAP-001` |
+| S-10 | FastAPI version and ASGI server | — | Applicable — recorded as P1-S-10 | 1.6 | `VER-P1-API-SHELL-001` |
+| S-11 | Python linting and formatting tools | — | Applicable — recorded as P1-S-11 | 1.10, 1.11 | `VER-P1-LINT-001`, `VER-P1-FORMAT-001` |
+| S-12 | Python type checker | — | Applicable — recorded as P1-S-12 | 1.12 | `VER-P1-TYPECHECK-001` |
+| S-13 | Python test runner | — | Applicable — recorded as P1-S-13 | 1.13 | `VER-P1-TEST-001` |
+| S-14 | Python import-rule enforcement tool | — | Applicable — recorded as P1-S-14 | 1.7 | `VER-P1-BOUNDARIES-001` |
+| S-15 | Frontend dependency-restriction mechanism | — | Applicable — recorded as P1-S-15 | 1.8 | `VER-P1-WEB-SHELL-001` |
 | S-16 | OpenAPI-to-TypeScript client generator | OD-04 | **NOT APPLICABLE** — derivation is in P3 (P1-OD-04) | — | — |
-| S-17 | Dependency vulnerability scanner | OD-07 | Applicable — scanning in Phase 1 (P1-OD-07) | 1.15 | `VER-P1-DEPS-001` (scan part) |
-| S-18 | Pre-commit hook set (beyond the retained Gitleaks hook) | — | Always | 1.14 | `VER-P1-PRECOMMIT-001` |
+| S-17 | Dependency vulnerability scanner | OD-07 | Applicable — scanning in Phase 1 (P1-OD-07); recorded as P1-S-17 | 1.15 | `VER-P1-DEPS-001` (scan part) |
+| S-18 | Pre-commit hook set (beyond the retained Gitleaks hook) | — | Applicable — recorded as P1-S-18 | 1.14 | `VER-P1-PRECOMMIT-001` |
 
 #### Implementation
 
@@ -1432,10 +1432,10 @@ Mitigation: the Phase 0 stopping rule (P1-OD-10), stated before Phase 1 evidence
 
 ## Known Limitations
 
-- No tool is selected. Tool names are candidates.
+- Toolchain selections are recorded (`docs/decisions/decision-register.md` §8); their working evidence is pending the consuming tasks' checks.
 - The OD-02 edges are undefined and deferred (P1-OD-02; deferred family F10).
 - `system-architecture.md` §2 has no slot for shared TypeScript packages or a generated client; this is deferred (P1-OD-03).
-- Domain-isolation enforcement depends on the capability of the tool selected under S-14 (task 1.7).
+- Domain-isolation enforcement depends on the capability of the tool selected under S-14 (P1-S-14; task 1.7).
 - The verifier supports only `phase-0` until task 1.17.
 - `README.md` and `CLAUDE.md` describe the project as in Phase 0 until task 1.18.
 
