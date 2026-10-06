@@ -4,7 +4,7 @@
 
 ## Status
 
-`Not Started`
+`In Progress`
 
 This is the phase lifecycle status (`docs/phases/README.md` §8). It changes only through the lifecycle, with the Project Owner's authorization. Creating, proposing or revising this document is not a lifecycle transition and does not move Phase 1 to `In Progress`.
 
@@ -12,7 +12,7 @@ This is the phase lifecycle status (`docs/phases/README.md` §8). It changes onl
 - **document creation:** this file exists;
 - **document proposal:** its content is proposed for owner review;
 - **content acceptance:** not required. Under the owner decision P1-OD-09 (`docs/decisions/decision-register.md` §6), no acceptance-register entry is required before entry, and none is created by this document. The Project Owner's explicit approval of this planning baseline is the basis for the later `Not Started` → `In Progress` transition;
-- **phase lifecycle transition:** none. The only Status History row records the phase's initial state.
+- **phase lifecycle transition:** recorded in the Status History.
 
 ## Objective
 
@@ -1491,6 +1491,7 @@ No commit may occur in the real repository during a verification run (`docs/phas
 | Date       | Previous Status | New Status  | Reason                                                                                                                                            | Evidence      |
 | ---------- | --------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
 | 2026-10-06 | —               | Not Started | Phase document created as a proposed planning baseline. This row records the phase's initial state; it is not a transition into `In Progress` | This document |
+| 2026-10-06 | Not Started     | In Progress | Owner-authorized lifecycle transition (Project Owner, 2026-10-06) following the implementation-gate review at `86c03c66eff2af3c597e52e6d174862862b91dec` (decision: READY FOR PHASE 1 TRANSITION). Phase 0 is `Complete`. The Phase 1 pre-entry decisions were recorded before entering the phase: P1-OD-01 to P1-OD-11 and P1-ED-01 to P1-ED-03 (`4a8fd60`); toolchain selections P1-S-01, P1-S-03 to P1-S-15, P1-S-17 and P1-S-18 (`68474a3`); and their selection-criteria and supply-chain amendment (F-1, `86c03c6`). Transition basis under P1-OD-09: the Project Owner's approval of the planning baseline. Phase 1 work begins | `docs/decisions/decision-register.md` §6–§9; Project Owner authorization of 2026-10-06 |
 
 Status history is append-only.
 
