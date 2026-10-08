@@ -88,7 +88,7 @@ An architectural dependency is an architectural definition that a requirement or
 
 ## 6. Phase 1 Owner Decisions and Deferrals
 
-Owner decisions and deferrals for Phase 1 (Repository & Engineering Foundation). They are recorded under §1. The IDs correspond to the Phase 1 planning identifiers OD-01 to OD-11. Each entry records a decision or deferral made by the Project Owner and cites the accepted authority it operates within; it creates no architectural authority. Phase 1 tooling selections are recorded separately when made.
+Owner decisions and deferrals for Phase 1 (Repository & Engineering Foundation). They are recorded under §1. The IDs correspond to the Phase 1 planning identifiers OD-01 to OD-11. P1-OD-12 was added during Phase 1 execution (task 1.15) and has no planning-identifier counterpart. Each entry records a decision or deferral made by the Project Owner and cites the accepted authority it operates within; it creates no architectural authority. Phase 1 tooling selections are recorded separately when made.
 
 | ID | Subject | Decision | Decided by | Decision date | Outcome | Authority basis | Phase | Affects |
 | -- | ------- | -------- | ---------- | ------------- | ------- | --------------- | ----- | ------- |
@@ -103,6 +103,7 @@ Owner decisions and deferrals for Phase 1 (Repository & Engineering Foundation).
 | P1-OD-09 | Content acceptance of the Phase 1 planning document | Decided | Project Owner | 2026-10-05 | No separate acceptance-register content acceptance is required before Phase 1 enters `In Progress`, and the acceptance register is not amended for this purpose. The Project Owner's explicit approval of the planning baseline is the basis for the `Not Started` → `In Progress` transition, under the existing lifecycle rules | `docs/architecture/acceptance-register.md` §1–§2; `docs/phases/README.md` §11a | P1 | Entry of Phase 1 into `In Progress` |
 | P1-OD-10 | Evidence-publication stopping rule | Decided | Project Owner | 2026-10-05 | The Phase 0 evidence-publication stopping rule is adopted: a designated terminal evidence-publication commit's own CI run is reported, not recorded. The rule is stated explicitly before Phase 1 evidence publication begins | Phase 0 evidence-publication practice (terminal commit `beac056cf65dd151a6a3f0c3e35ec5b98fdae730`) | P1 | Phase 1 verification and evidence recording |
 | P1-OD-11 | Frontend API consumption | Decided | Project Owner | 2026-10-05 | No frontend API calls in Phase 1. No proxy, backend-for-frontend or other new trust boundary is introduced | Canonical specification §5, §6 | P1 | Phase 1 Next.js shell |
+| P1-OD-12 | Execution of dependency vulnerability scanning in Phase 1 | Decided | Project Owner | 2026-10-08 | Dependency vulnerability scanning introduced by P1-OD-07 (P1-S-17: `pnpm audit` and `uv audit`) is executed under task 1.15, through the root `audit` command. It is not part of the Phase 1 CI quality-job scope defined by P1-OD-06 and task 1.16 (lint, format verification, type checking and tests). P1-S-17 is consumed by task 1.15 only. This entry does not decide CI execution of dependency scanning in later phases (P19 security hardening; P22 CI/CD) | P1-OD-06; P1-OD-07; canonical specification §21, §22 | P1 | Task 1.16 scope; P1-S-17 `Consumed by` |
 
 ## 7. Phase 1 Enforcement Dispositions
 
@@ -128,8 +129,9 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
 | Revision | 2026-10-06: revised from pnpm `11.28.4` (recorded in commit `68474a3`) to `12.9.1` by Project Owner decision during toolchain reconciliation. The previous selection and its rationale are superseded |
+| Revision | 2026-10-08: pnpm's pre-run dependency verification is disabled for this workspace with `verifyDepsBeforeRun: false` in `pnpm-workspace.yaml`, by Project Owner decision during task 1.15. In the task 1.15 gate 4a scratch test, with the setting unset, `pnpm run deps:check` performed a dependency install before the script ran, fetching a package from the registry, in a scratch workspace whose `apps/web/package.json` did not match `pnpm-lock.yaml` and which had no `node_modules`. In the subsequent task 1.15 scratch test with `verifyDepsBeforeRun: false` under the same mismatch conditions, no install occurred before the script, no registry access occurred, and the script's own lockfile-consistency check failed on the mismatch. The pnpm version and its pinning are unchanged |
 | Selection | pnpm `12.9.1` |
-| Version and pinning | Exact version in the root `package.json` `packageManager` field, with the registry sha512 hash (registry integrity `sha512-BrBV//XNINwSeB3hc87TMQzglRvy7GICEaFgRdVETVyTpmMhB2TvKaZTphBFm6A2jw50+E2AxUcjz5Wq57wNbQ==`) |
+| Version and pinning | Exact version in the root `package.json` `packageManager` field, with the registry sha512 hash (registry integrity `sha512-BrBV//XNINwSeB3hc87TMQzglRvy7GICEaFgRdVETVyTpmMhB2TvKaZTphBFm6A2jw50+E2AxUcjz5Wq57wNbQ==`); workspace setting `verifyDepsBeforeRun: false` in `pnpm-workspace.yaml` (see Revision 2026-10-08) |
 | Rationale | Strict, non-flat `node_modules`; workspace and lockfile support; `12.9.1` is the registry's `latest` release at selection (published 2026-10-03, not deprecated) |
 | Selection criteria and supply-chain considerations | Locked installation from a committed lockfile; workspace support with root scripts and no task runner (P1-OD-05); strict, non-flat `node_modules` that prevents use of undeclared dependencies. Supply chain: exact version pinned with its registry sha512 hash; the registry's current `latest` release at selection |
 | Rejected alternatives | pnpm `11.28.4` (previous selection; older major line); npm |
@@ -341,16 +343,17 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decision | Decided |
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
-| Selection | import-linter `2.15`, with forbidden contracts only: one for Platform importing neither Application nor Domains (canonical specification §9), and one each for P1-ED-01, P1-ED-02 and P1-ED-03. No layers contract |
+| Revision | 2026-10-07: an independence contract over `domains.*` (canonical specification §8, domain-to-domain isolation) added by Project Owner decision, after the task 1.7 capability test established that import-linter `2.15` expresses the rule generically. The four forbidden contracts and the absence of a layers contract are unchanged; P1-OD-02 and P1-OD-03 are unaffected |
+| Selection | import-linter `2.15`, with four forbidden contracts and one independence contract. The forbidden contracts are one for Platform importing neither Application nor Domains (canonical specification §9), and one each for P1-ED-01, P1-ED-02 and P1-ED-03. The independence contract is over `domains.*`, for domain-to-domain isolation (canonical specification §8). No layers contract |
 | Version and pinning | Exact |
-| Rationale | Forbidden contracts map one-to-one onto the enforced rules without permitting or forbidding the edges deferred under P1-OD-02 |
-| Selection criteria and supply-chain considerations | Deterministic import-rule enforcement; forbidden contracts map one-to-one onto the canonical §9 rule and the enforcement dispositions P1-ED-01 to P1-ED-03; no layers contract, so the edges deferred under P1-OD-02 are not resolved by configuration. Supply chain: exact pin |
+| Rationale | Forbidden contracts map one-to-one onto the enforced rules without permitting or forbidding the edges deferred under P1-OD-02. The independence contract enforces the existing canonical §8 rule generically, without listing concrete domain packages |
+| Selection criteria and supply-chain considerations | Deterministic import-rule enforcement; forbidden contracts map one-to-one onto the canonical §9 rule and the enforcement dispositions P1-ED-01 to P1-ED-03; an independence contract over `domains.*` enforces canonical §8 generically; no layers contract, so the edges deferred under P1-OD-02 are not resolved by configuration. Supply chain: exact pin |
 | Rejected alternatives | Tach; a custom script |
 | Authority basis | Canonical specification §4, §8, §9; P1-ED-01 to P1-ED-03; P1-OD-01 |
 | Phase | P1 |
 | Consumed by | Task 1.7 |
 | Evidence | Pending — `VER-P1-BOUNDARIES-001` |
-| Notes | Whether an independence contract can express domain isolation generically is established in task 1.7. If it can, adding it is recorded as a change to this entry; if not, domain isolation is deferred as task 1.7 provides |
+| Notes | Task 1.7 established (2026-10-07) that an independence contract expresses domain isolation generically, and it is adopted (see Revision). Consequence: `domains.*` treats every direct child of `domains` as a separate isolated domain — direct modules as well as packages — so no direct child of `domains` may import another; code nested inside a domain package belongs to that domain |
 
 ### P1-S-15 — Frontend dependency-restriction mechanism
 
@@ -359,6 +362,7 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decision | Decided |
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
+| Revision | 2026-10-07: the prohibited-package list is established at `scripts/checks/frontend-prohibited-packages.txt` by Project Owner decision. That file is the governed, deterministic input to the check; it lists exact npm package names and whole-scope patterns (`@scope/*`) in four categories (database drivers; ORMs and query builders; Redis and queue clients; LLM provider SDKs), and comments in it carry no enforcement meaning. The check fails closed on a malformed or duplicate entry. It covers the resolved `apps/web` dependency graph in `pnpm-lock.yaml`, including transitive packages, as well as `apps/web/package.json`. Any change to the prohibited set is a P1-S-15 revision decided by the Project Owner, not a change made through the script. Vulnerability auditing remains P1-S-17 |
 | Selection | A repository check script using only the Python standard library, which checks the `apps/web` manifest and the pnpm lockfile against an explicit, reviewable prohibited-package list |
 | Version and pinning | Not applicable (repository code) |
 | Rationale | Deterministic; checks dependency declarations as task 1.8 specifies; adds no dependency |
@@ -378,6 +382,8 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Decided by | Project Owner |
 | Decision date | 2026-10-06 |
 | Revision | 2026-10-06: the pnpm version reference revised from `11.28.4` to `12.9.1` to follow the P1-S-01 revision. The policy and exception mechanisms are unchanged |
+| Revision | 2026-10-08: commands, exit-status semantics and exception behaviour established in task 1.15, observed with pnpm `12.9.1`, uv `0.12.23` and Node.js `26.10.0` on Windows (root scripts run by pnpm through `cmd.exe`). Commands, as root `package.json` scripts: `audit` = `pnpm audit && uv audit --locked` (`--locked` prevents the audit from re-locking the project); lockfile consistency, `deps:check` = `pnpm install --frozen-lockfile --lockfile-only --offline && uv lock --check --offline`. The pnpm command in each workflow is subject to `verifyDepsBeforeRun: false` (P1-S-01, Revision 2026-10-08): in the task 1.15 gate 4a run of 2026-10-07, without that setting, `pnpm run deps:check` installed dependencies from the registry before the script and the lockfile mismatch went undetected (exit 0; FAIL); the gate 4a rerun of 2026-10-08 with the setting detected it (exit 1). Lockfile consistency (all offline, with network access blocked): `deps:check` exits 0 when both lockfiles are consistent, and exits 1 when `apps/web/package.json` does not match `pnpm-lock.yaml` (`ERR_PNPM_OUTDATED_LOCKFILE`), when `pyproject.toml` does not match `uv.lock` ("needs to be updated"), when `pnpm-lock.yaml` is missing (`ERR_PNPM_NO_LOCKFILE`), and when `uv.lock` is missing ("Unable to find lockfile"); with `&&`, a pnpm failure prevents the uv check. With `pnpm-lock.yaml` missing, the failing check left a self-pin-only `pnpm-lock.yaml` (pnpm `packageManagerDependencies` only, no `apps/web` importer; SHA-256 `5cbd0b5b4bc2378c8fa000b74d5b90d4584d4ec15b7dbff2eb6f98ad467ffa87`), and a second run still failed with `ERR_PNPM_NO_LOCKFILE` without changing that file; the cause of the file's creation is not established. A missing `uv.lock` left no file behind. No network access occurred in these runs (in the `pyproject.toml` case, one raw network-marker count matched only the echoed `--offline` command text). Scanning: on 2026-10-08 with network access, `audit` exited 0 (`pnpm audit`: "No known vulnerabilities found"; `uv audit --locked`: no known vulnerabilities and no adverse project statuses in 46 packages) — PASS. With the advisory services unreachable, `pnpm audit` exited 1 (`ERR_PNPM_AUDIT_BAD_RESPONSE`, request to the advisory endpoint refused) and `uv audit --locked` exited 2 ("Auditing requires network access and cannot be performed in offline mode"); neither produced advisory data — BLOCKED under the Policy row. Exit codes for advisory-positive results were not observed for either tool, so BLOCKED is distinguished from FAIL by the diagnostic output, not by exit code alone. No §9 exception exists, and the exception mechanisms were not exercised. `uv audit` reports itself as experimental |
+| Revision | 2026-10-08: `Consumed by` narrowed from tasks 1.15 and 1.16 to task 1.15 by P1-OD-12 |
 | Selection | `pnpm audit` (pnpm `12.9.1`) for the JavaScript dependency graph; `uv audit` (uv `0.12.23`) for the Python dependency graph |
 | Version and pinning | Follows P1-S-01 and P1-S-09 |
 | Policy | Any known advisory fails, regardless of severity. Development-only and transitive dependencies are included. An advisory with no available fix fails. An exception exists only when approved by the Project Owner and recorded in §9. A nonzero audit result caused by one or more advisories not covered by a §9 exception is FAIL. An execution or tooling failure that prevents a trustworthy audit result, including an unreachable advisory service or offline execution, is BLOCKED, never PASS. Each audit run records its date and tool version |
@@ -387,9 +393,9 @@ S-02 and S-16 have no entry. S-02 (task runner) is not applicable under P1-OD-05
 | Rejected alternatives | osv-scanner; pip-audit |
 | Authority basis | P1-OD-07; canonical specification §21; P1-OD-01 |
 | Phase | P1 |
-| Consumed by | Tasks 1.15, 1.16 |
+| Consumed by | Task 1.15 |
 | Evidence | Pending — `VER-P1-DEPS-001` |
-| Notes | The exact commands, exit-status semantics and exception behaviour are established in task 1.15 |
+| Notes | The exact commands, exit-status semantics and exception behaviour were established in task 1.15; see Revision 2026-10-08 |
 
 ### P1-S-18 — Pre-commit hook set
 
