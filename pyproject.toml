@@ -1,0 +1,77 @@
+[project]
+name = "sentinel-ai"
+version = "0.0.0"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "fastapi==0.142.2",
+    "uvicorn==0.54.0",
+    "pydantic==2.13.5",
+    "pydantic-settings==2.15.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx==0.28.1",
+    "import-linter==2.15",
+    "mypy==2.4.0",
+    "pre-commit==4.6.2",
+    "pytest==9.1.1",
+    "ruff==0.16.10",
+]
+
+[tool.uv]
+required-version = "==0.12.23"
+package = false
+
+[tool.ruff]
+target-version = "py314"
+src = ["services"]
+include = ["services/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["S"]
+
+[tool.ruff.lint.per-file-ignores]
+"services/api/tests/**/*.py" = ["S101"]
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+mypy_path = "services"
+packages = ["api", "application", "domains", "sentinel_platform"]
+
+[tool.pytest.ini_options]
+pythonpath = ["services"]
+testpaths = ["services/api/tests"]
+
+[tool.importlinter]
+root_packages = ["api", "application", "domains", "sentinel_platform"]
+
+[[tool.importlinter.contracts]]
+name = "Platform imports neither Application nor Domains (canonical specification section 9)"
+type = "forbidden"
+source_modules = ["sentinel_platform"]
+forbidden_modules = ["application", "domains"]
+
+[[tool.importlinter.contracts]]
+name = "Platform does not import API (P1-ED-01)"
+type = "forbidden"
+source_modules = ["sentinel_platform"]
+forbidden_modules = ["api"]
+
+[[tool.importlinter.contracts]]
+name = "Application does not import API (P1-ED-02)"
+type = "forbidden"
+source_modules = ["application"]
+forbidden_modules = ["api"]
+
+[[tool.importlinter.contracts]]
+name = "Domains import neither Application nor API (P1-ED-03)"
+type = "forbidden"
+source_modules = ["domains"]
+forbidden_modules = ["application", "api"]
+
+[[tool.importlinter.contracts]]
+name = "Domains do not import other domains (canonical specification section 8)"
+type = "independence"
+modules = ["domains.*"]
