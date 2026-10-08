@@ -1,0 +1,72 @@
+# Sentinel AI — frontend prohibited-package list (P1-S-15; Phase 1 task 1.8)
+#
+# Governed, deterministic input to scripts/checks/frontend-dependency-check.py.
+# Canonical specification §6: Next.js does not directly access PostgreSQL, Redis,
+# queues, internal persistence or LLM providers.
+#
+# Format: one entry per line. An entry is an exact npm package name
+# (for example `pg` or `@vercel/postgres`) or a whole scope (`@prisma/*`).
+# Lines starting with `#` and blank lines are ignored; category headings are
+# comments only and carry no enforcement meaning. Any other line that is not a
+# valid entry, and any duplicate entry, makes the check fail closed.
+#
+# Changing this set requires a P1-S-15 revision recorded by the Project Owner.
+
+# Category: database drivers
+pg
+pg-native
+postgres
+mysql
+mysql2
+sqlite3
+better-sqlite3
+mssql
+tedious
+oracledb
+mongodb
+@neondatabase/serverless
+@vercel/postgres
+@planetscale/database
+@libsql/client
+
+# Category: ORMs and query builders
+prisma
+@prisma/*
+drizzle-orm
+typeorm
+sequelize
+knex
+kysely
+@mikro-orm/*
+mongoose
+objection
+
+# Category: Redis and queue clients
+redis
+ioredis
+@upstash/redis
+@vercel/kv
+bull
+bullmq
+bee-queue
+amqplib
+kafkajs
+@upstash/qstash
+@aws-sdk/client-sqs
+@google-cloud/pubsub
+
+# Category: LLM provider SDKs
+openai
+@anthropic-ai/sdk
+@google/generative-ai
+@google/genai
+cohere-ai
+@mistralai/mistralai
+groq-sdk
+ai
+@ai-sdk/*
+langchain
+@langchain/*
+llamaindex
+replicate
+@huggingface/inference
