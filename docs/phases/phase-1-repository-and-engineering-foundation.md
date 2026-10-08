@@ -137,7 +137,7 @@ These are resolved before Phase 1 execution begins. They are not resolved by any
 
 ### Execution-stage decisions
 
-OD-02 to OD-08, OD-10 and OD-11 have also been recorded by the Project Owner (P1-OD-02 to P1-OD-08, P1-OD-10, P1-OD-11; see Deferred Decisions). OD-02 and OD-03 are recorded as `Deferred`; the others as `Decided`. The task that the baseline assigned to obtaining each decision now references the recorded entry; it does not re-decide it.
+OD-02 to OD-08, OD-10 and OD-11 have also been recorded by the Project Owner (P1-OD-02 to P1-OD-08, P1-OD-10, P1-OD-11; see Deferred Decisions). OD-02 and OD-03 are recorded as `Deferred`; the others as `Decided`. The task that the baseline assigned to obtaining each decision now references the recorded entry; it does not re-decide it. P1-OD-12 (Decided) was recorded during task 1.15; see Deferred Decisions.
 
 **Lifecycle of every owner decision:**
 1. unresolved;
@@ -160,7 +160,7 @@ This document operationalizes accepted architecture. It does not define it.
 | Repository topology | `docs/architecture/system-architecture.md` §2 (an implementation-level convention) | Proposed |
 | Layer responsibilities | `docs/architecture/application-architecture.md` | Proposed |
 | ADR process and index | `docs/decisions/README.md` (ACC-011) | Accepted |
-| Non-ADR selections, owner decisions and deferrals (including P1-OD-01 to P1-OD-11 and P1-ED-01 to P1-ED-03) | `docs/decisions/decision-register.md`, designated by `documentation-authority.md` §4 and `docs/decisions/README.md` §3a | Proposed (the register document); its designation is Accepted |
+| Non-ADR selections, owner decisions and deferrals (including P1-OD-01 to P1-OD-12 and P1-ED-01 to P1-ED-03) | `docs/decisions/decision-register.md`, designated by `documentation-authority.md` §4 and `docs/decisions/README.md` §3a | Proposed (the register document); its designation is Accepted |
 | Developer commands; commit convention | `docs/operations/developer-workflow.md` | Proposed |
 | Security architecture and procedures | `docs/architecture/security-architecture.md`; `docs/security/` | Proposed |
 | Claude Code configuration | `CLAUDE.md`; `.claude/` | — |
@@ -1354,7 +1354,7 @@ The Phase 1 verification record.
 | ID | Criterion | Verification | Owning task | NOT APPLICABLE when |
 | -- | --------- | ------------ | ----------- | ------------------- |
 | P1-AC-001 | Each applicable selection (S-01, S-03 to S-15, S-17, S-18) has an owner-decided record in `docs/decisions/decision-register.md` | `VER-P1-SELECTIONS-001` | 1.1 | Per selection: S-02 (P1-OD-05) and S-16 (P1-OD-04) |
-| P1-AC-002 | P1-OD-01 to P1-OD-11 are recorded in `docs/decisions/decision-register.md` §6 with their decision state (pre-entry OD-01 and OD-09 `Decided`; OD-02 and OD-03 `Deferred`; the others `Decided`), and P1-ED-01 to P1-ED-03 in §7 | `VER-P1-DECISIONS-001` | 1.19 (1.19-A evaluates) | — |
+| P1-AC-002 | P1-OD-01 to P1-OD-12 are recorded in `docs/decisions/decision-register.md` §6 with their decision state (pre-entry OD-01 and OD-09 `Decided`; OD-02 and OD-03 `Deferred`; the others `Decided`), and P1-ED-01 to P1-ED-03 in §7 | `VER-P1-DECISIONS-001` | 1.19 (1.19-A evaluates) | — |
 | P1-AC-003 | A clean clone installs from committed lockfiles with pinned tool versions | `VER-P1-BOOTSTRAP-001` | 1.5 | — |
 | P1-AC-004 | The FastAPI shell's health and OpenAPI-generation tests pass | `VER-P1-API-SHELL-001` | 1.6 | — |
 | P1-AC-005 | Each enforced import rule rejects its violation and the repository passes; domain isolation is reported as generic or deferred | `VER-P1-BOUNDARIES-001` | 1.7 | — |
@@ -1395,7 +1395,7 @@ The Phase 1 verification record.
 - all Transition to Verification conditions hold;
 - `VER-P1-CI-EXEC-001` is `PASS`;
 - `VER-P1-CI-QUALITY-001` is `PASS` (P1-OD-06);
-- P1-AC-002 holds (`VER-P1-DECISIONS-001` `PASS`): P1-OD-01 to P1-OD-11 and P1-ED-01 to P1-ED-03 recorded;
+- P1-AC-002 holds (`VER-P1-DECISIONS-001` `PASS`): P1-OD-01 to P1-OD-12 and P1-ED-01 to P1-ED-03 recorded;
 - the Phase 1 ADR gate is satisfied;
 - the Final Verification is recorded;
 - the Project Owner's completion decision is recorded, with a disposition for every review finding.
@@ -1458,6 +1458,7 @@ Phase 1 owner decisions and deferrals. All are recorded by the Project Owner in 
 | OD-09 | Pre-entry | P1-OD-09 | Decided | 2026-10-05 | No separate content acceptance; the owner's explicit approval of the planning baseline is the basis for entry to `In Progress` | Status; entry to `In Progress` |
 | OD-10 | Execution | P1-OD-10 | Decided | 2026-10-05 | The Phase 0 evidence-publication stopping rule is adopted and stated before Phase 1 evidence publication begins | Task 1.19 (1.19-C, 1.19-F) |
 | OD-11 | Execution | P1-OD-11 | Decided | 2026-10-05 | No frontend API calls in Phase 1; no proxy, backend-for-frontend or new trust boundary | Task 1.8; P1-AC-007 |
+| — | Execution | P1-OD-12 | Decided | 2026-10-08 | Dependency vulnerability scanning (P1-S-17) is executed under task 1.15, not in the Phase 1 CI quality jobs; later-phase CI scanning not decided | Task 1.16 scope unchanged; S-17 consumed by task 1.15 only |
 
 Enforcement dispositions P1-ED-01 to P1-ED-03 are recorded in the register's §7 (see Architectural Constraints).
 
